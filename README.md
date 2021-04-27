@@ -48,7 +48,7 @@ rm -r xnli_extension
 # run scripts
 ```
 python run_sent_reps_extraction.py
-python run metrics_computation.py
+python run metrics_computation.py # run this one with numpy==1.16.0 ("tmp" env)
 jupyter notebook
 ```
 

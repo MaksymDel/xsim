@@ -1,9 +1,10 @@
+# depricated
 import os
 import sys
 
-sys.path.append('.')
+sys.path.append('..')
 
-from normal_transformers.analysis.sim2_0 import compute_similarity_all_layers
+from normal_transformers.analysis.similarities import compute_similarity_all_layers_google
 from normal_transformers.util.util_common import pickle_dump_to_file, pickle_load_from_file
 
 
@@ -14,28 +15,33 @@ def compute_sim_scores(data_encoded, sim_name, langs):
     for tgt_code in langs:
         if tgt_code != src_code:
             tgt_enc = data_encoded[tgt_code]
-            score = compute_similarity_all_layers(x=src_enc, y=tgt_enc, sim=sim_name)
+
+            print(f"{sim_name}: {src_code}-{tgt_code}")
+            score = compute_similarity_all_layers_google(M1=src_enc, M2=tgt_enc, sim_name=sim_name)
+
             sim_scores[f"{src_code}-{tgt_code}"] = score
     return sim_scores
 
 
 if __name__ == '__main__':
+
     exp_folder = "experiments"
     savedir_base = f"{exp_folder}/assets/multilingual"
     datadir = f"{exp_folder}/data"
 
+
     # loop over
-    langs = ["en", "ar", "az", "bg", "cs", "da"]
+    langs = ["en", "ar", "az", "bg", "cs", "da", "en_shuf"]
     # langs = "ar az bg cs da de el en es et fi fr hi hu kk lt lv nl no pl ru sv sw tr ur uz vi zh".split()
     model_names_or_dirs = [
         # "xlm-roberta-large",
-        # "xlm-roberta-base",
-        #"bert-base-multilingual-cased",
-        "bert-base-multilingual-uncased"
+        "bert-base-multilingual-uncased",
+        "bert-base-multilingual-cased",
+        "xlm-roberta-base",
         # "distilbert-base-multilingual-cased",
         # "xlm-mlm-100-1280"
     ]
-    sim_names = ["cka", "svcca", "pwcca"]
+    sim_names = ["cca", "pwcca", "svcca", "cka"]
     sent_rep_types = ["mean", "cls"]
 
     for model_name_or_dir in model_names_or_dirs:
@@ -48,8 +54,10 @@ if __name__ == '__main__':
         for lang in langs:
             loadfile_path_base = f"{savedir_base}/{model_name_or_dir}/xnli_encoded/multinli.train"
 
-            data_encoded_mean[lang] = pickle_load_from_file(f"{loadfile_path_base}_sentemb_mean.{lang}.pkl")
-            data_encoded_cls[lang] = pickle_load_from_file(f"{loadfile_path_base}_sentemb_cls.{lang}.pkl")
+            data_encoded_mean[lang] = pickle_load_from_file(f"{loadfile_path_base}_sentemb_mean.{lang}.pkl",
+                                                            verbose=False)
+            data_encoded_cls[lang] = pickle_load_from_file(f"{loadfile_path_base}_sentemb_cls.{lang}.pkl",
+                                                           verbose=False)
         data_encoded_all = {"mean": data_encoded_mean, "cls": data_encoded_cls}
 
         # compute metrics
@@ -66,4 +74,3 @@ if __name__ == '__main__':
 
                 savefile_path = f"{savedir}/xnli6_{sim_name}_{sent_rep_type}.pkl"
                 pickle_dump_to_file(sim_scores, savefile_path)
-
