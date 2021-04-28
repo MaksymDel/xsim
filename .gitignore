@@ -1,4 +1,8 @@
 experiments
 .idea
 /examples/.ipynb_checkpoints/
-svcca
+third_party/svcca
+/third_party/
+third_party
+/third_party/
+/third_party/procrustes/

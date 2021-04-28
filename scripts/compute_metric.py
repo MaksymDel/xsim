@@ -4,7 +4,7 @@ import sys
 
 sys.path.append('.')
 
-from normal_transformers.analysis.similarities import compute_similarity_all_layers_google
+from normal_transformers.util.util_analysis import compute_similarity_all_layers
 from normal_transformers.util.util_common import pickle_load_from_file
 
 model_names_or_dirs = [
@@ -25,8 +25,17 @@ if __name__ == '__main__':
     sent_rep_type = sys.argv[3]
     lang_pair = sys.argv[4]
 
+    prefix = "onlyhypo"
+    data_prefix = f"{prefix}_multinli.train"
+
     assert model_name_or_dir in model_names_or_dirs
-    assert sim_name in ["cca", "pwcca", "svcca", "cka"] or "svcca_" in sim_name
+
+    check = False
+    for nm in ["cca", "pwcca", "svcca", "cka"]:
+        if nm in sim_name:
+            check = True
+    assert check
+
     assert sent_rep_type in ["mean", "cls"]
 
     src_lang, tgt_lang = lang_pair.split("-")
@@ -36,8 +45,8 @@ if __name__ == '__main__':
     datadir = f"{exp_folder}/data"
     savedir = f"{savedir_base}/{model_name_or_dir}/sim_scores"
     os.makedirs(savedir, exist_ok=True)
-    savefile_path = f"{savedir}/xnli6_{sim_name}_{sent_rep_type}_{lang_pair}.csv"
-    loadfile_path_base = f"{savedir_base}/{model_name_or_dir}/xnli_encoded/multinli.train"
+    savefile_path = f"{savedir}/{prefix}_xnli6_{sim_name}_{sent_rep_type}_{lang_pair}.csv"
+    loadfile_path_base = f"{savedir_base}/{model_name_or_dir}/xnli_encoded/{data_prefix}"
 
     print(f"{model_name_or_dir} {sent_rep_type} {sim_name} {lang_pair}")
     # if os.path.isfile(savefile_path):
@@ -50,7 +59,7 @@ if __name__ == '__main__':
                                              verbose=True)
 
     # compute metric
-    sim_scores = compute_similarity_all_layers_google(M1=data_encoded_src, M2=data_encoded_tgt, sim_name=sim_name)
+    sim_scores = compute_similarity_all_layers(M1=data_encoded_src, M2=data_encoded_tgt, sim_name=sim_name)
 
     # save
     with open(savefile_path, 'w', newline='') as myfile:

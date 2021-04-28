@@ -9,6 +9,13 @@ from normal_transformers.util.util_encode import extract_reps_sent
 
 
 if __name__ == '__main__':
+    only_hypo = True
+
+    if not only_hypo:
+        prefix = "multinli.train"
+    else:
+        prefix = "onlyhypo_multinli.train"
+
     batch_size = 512  # probably can do 512
 
     exp_folder = "experiments"
@@ -22,11 +29,12 @@ if __name__ == '__main__':
     model_names_or_dirs = [
         # "xlm-roberta-large",
         "xlm-roberta-base",
-        "bert-base-multilingual-cased",
+        # "bert-base-multilingual-cased",
         "bert-base-multilingual-uncased",
         # "distilbert-base-multilingual-cased",
         # "xlm-mlm-100-1280"
     ]
+    sent_rep_types = ["mean", "cls"]
 
     for model_name_or_dir in model_names_or_dirs:
 
@@ -38,7 +46,7 @@ if __name__ == '__main__':
         os.makedirs(savedir, exist_ok=True)
 
         for lang in langs:
-            data = read_data_xnli(xnli_folder=datadir, lang_code=lang)
+            data = read_data_xnli(xnli_folder=datadir, lang_code=lang, only_hypo=only_hypo)
             data_encoded = extract_reps_sent(
                 data=data,
                 tokenizer_hf=tokenizer_hf,
@@ -49,7 +57,8 @@ if __name__ == '__main__':
             # print(f"{lang} | mean sent reps size: {data_encoded['mean'].shape}")
             # print(f"{lang} | cls sent reps size: {data_encoded['cls'].shape}")
 
-            savefile_path_base = f"{savedir}/multinli.train"
+            savefile_path_base = f"{savedir}/{prefix}"
 
-            pickle_dump_to_file(data_encoded['mean'], f"{savefile_path_base}_sentemb_mean.{lang}.pkl")
-            pickle_dump_to_file(data_encoded['cls'], f"{savefile_path_base}_sentemb_cls.{lang}.pkl")
+            for sent_rep_type in sent_rep_types:
+                pickle_dump_to_file(data_encoded[sent_rep_type],
+                                    f"{savefile_path_base}_sentemb_{sent_rep_type}.{lang}.pkl")

@@ -7,6 +7,37 @@ from torch import Tensor
 from typing import Tuple
 
 
+def compute_similarity(x: Tensor,
+                       y: Tensor,
+                       sim_name: str
+                       ):
+    x, y = maybe_convert_to_torch(x, y)
+
+    if "cka" in sim_name:
+        res = linear_cka_distance(x, y, False)
+    elif "svcca" in sim_name:
+        accept_rate = float(sim_name.split("_")[1])
+        res = svcca_distance(x, y, accept_rate=accept_rate, backend='svd')
+    elif "pwcca" in sim_name:
+        res = pwcca_distance(x, y, 'svd')
+    elif "cca" in sim_name:
+        res = cca_distace(x, y, 'svd')
+    # elif sim == 'cca':
+    #     res = 1 - cca(x, y, 'svd')[2].sum()
+    #     # TODO: check for correctness
+    #     # TODO: correlate 2 components?
+    else:
+        raise ValueError(f"{sim_name} is not the known similarity")
+
+    return 1 - res.item()
+
+
+def cca_distace(x, y, backand='svd'):
+    div = min(x.size(1), y.size(1))
+    a, b, diag = cca(x, y, backend=backand)
+    return 1 - diag.sum() / div
+
+
 def _zero_mean(input: Tensor,
                dim: int
                ) -> Tensor:
@@ -215,35 +246,3 @@ def linear_cka_distance(x: Tensor,
     r = dot_prod / (norm_x * norm_y)
     return 1 - r
 
-
-def compute_similarity(x: Tensor,
-                       y: Tensor,
-                       sim: str
-                       ):
-    x, y = maybe_convert_to_torch(x, y)
-
-    if sim == "cka":
-        res = linear_cka_distance(x, y, False)
-    elif sim == "svcca":
-        res = svcca_distance(x, y, 0.99, 'svd')
-    elif sim == "pwcca":
-        res = pwcca_distance(x, y, 'svd')
-    # elif sim == 'cca':
-    #     res = 1 - cca(x, y, 'svd')[2].sum()
-    #     # TODO: check for correctness
-    #     # TODO: correlate 2 components?
-    else:
-        raise ValueError(f"{sim} is not the known similarity")
-
-    return 1 - res.item()
-
-
-def compute_similarity_all_layers(x: Tensor,
-                                  y: Tensor,
-                                  sim: str):
-    num_layers = x.shape[0]
-    scores = []
-    for l in range(num_layers):
-        scores.append(compute_similarity(x=x[l], y=y[l], sim=sim))
-
-    return scores

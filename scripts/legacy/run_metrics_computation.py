@@ -4,7 +4,7 @@ import sys
 
 sys.path.append('..')
 
-from normal_transformers.analysis.similarities import compute_similarity_all_layers_google
+from normal_transformers.util.util_analysis import compute_similarity_all_layers
 from normal_transformers.util.util_common import pickle_dump_to_file, pickle_load_from_file
 
 
@@ -17,7 +17,7 @@ def compute_sim_scores(data_encoded, sim_name, langs):
             tgt_enc = data_encoded[tgt_code]
 
             print(f"{sim_name}: {src_code}-{tgt_code}")
-            score = compute_similarity_all_layers_google(M1=src_enc, M2=tgt_enc, sim_name=sim_name)
+            score = compute_similarity_all_layers(M1=src_enc, M2=tgt_enc, sim_name=sim_name)
 
             sim_scores[f"{src_code}-{tgt_code}"] = score
     return sim_scores

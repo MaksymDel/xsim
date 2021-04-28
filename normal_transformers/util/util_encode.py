@@ -59,7 +59,7 @@ def extract_reps_sent(
         data,
         tokenizer_hf,
         encoder_hf,
-        batch_size,
+        batch_size
 ):
     # Sent embeddings
     encoded_sent_mean = []
