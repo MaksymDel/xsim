@@ -6,9 +6,9 @@ model_name=xlm-roberta-base
 
 for sent_rep in "mean"
   do
-    for metric in "google_cka" "anatome_svcca_0.99"
+    for metric in "google_svcca_20"
       do
-      for tgt_lang in  "ar" "az" "bg" "cs" "da" "en_shuf"
+      for tgt_lang in  "bg" #"ar" "az" "bg" "cs" "da" "en_shuf"
         do
           python scripts/compute_metric.py $model_name $metric $sent_rep $src_lang-$tgt_lang &
         done
