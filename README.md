@@ -39,27 +39,30 @@ install.packages("ggplot2")
 
 ## Fetch data
 ```
+mkdir experiments
 cd experiments
-mkdir data
-cd data
+mkdir multilingual
+cd multilingual  
 
 # xnli extension
-git clone https://github.com/salesforce/xnli_extension
-mv xnli_extension/data/* xnli_extension
+mkdir xnli_extension
+git clone https://github.com/salesforce/xnli_extension xnli_ext_repo
+mv xnli_ext_repo/data xnli_extension
+rm -rf xnli_ext_repo
 
 # xnli 15way
+mkdir xnli_15way
 wget https://dl.fbaipublicfiles.com/XNLI/XNLI-15way.zip
 unzip XNLI-15way.zip
 rm XNLI-15way.zip
-mv XNLI-15way xnli_15way
+mv XNLI-15way xnli_15way/data
 ```
 
 # run scripts
 ```
-python run_sent_reps_extraction.py
-python run metrics_computation.py # run this one with numpy==1.16.0 ("tmp" env)
-jupyter notebook
+CUDA_VISIBLE_DEVICES=1 python scripts/run_sent_reps_extraction.py xnli_extension
+bash scripts/compute_metrics_parallel.sh
 ```
 
 
-Now you can run notebooks and reproduce results.
+Now you can run analysis notebooks to reproduce plots.

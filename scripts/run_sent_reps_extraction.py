@@ -4,60 +4,54 @@ import sys
 sys.path.append(".")
 
 from transformers import AutoModel, AutoTokenizer
-from normal_transformers.util.util_common import (
+from normal_transformers.util.util_data import (
     pickle_dump_to_file,
     read_data,
 )
 from normal_transformers.util.util_encode import extract_reps_sent
+from normal_transformers.util import constants
 
+# exp_name = "xnli_extension"
+# exp_name = "xnli_extension_onlyhyp"
+# exp_name = "xnli_15way"
+# loop over
+# langs = ["en", "bg"]
+# langs = ["en_shuf"]
+# model_names_or_dirs = [
+#     "bert-base-multilingual-uncased",
+#     "bert-base-multilingual-cased",
+#     "xlm-roberta-base",
+#     "distilbert-base-multilingual-cased",
+#     "xlm-roberta-large",
+#     "xlm-mlm-100-1280",
+# ]
 
 if __name__ == "__main__":
-    # data_name = "xnli_extension"
-    data_name = "xnli_15way"
+    exp_name = sys.argv[1]
+    assert exp_name in constants.exp_names_all
+    exp_dir = f"experiments/{exp_name}"
 
-    only_hypo = True
-
-    if not only_hypo:
-        prefix = "multinli.train"
-    else:
-        prefix = "onlyhypo_multinli.train"
-
-    batch_size = 512  # probably can do 512
-
-    exp_folder = "experiments"
-    savedir_base = f"{exp_folder}/assets/multilingual"
-    datadir = f"{exp_folder}/data/{data_name}"
-
-    # loop over
-    langs = ["en", "ar", "az", "bg", "cs", "da", "en_shuf"]
-    # langs = ["en_shuf"]
-    # langs = "ar az bg cs da de el en es et fi fr hi hu kk lt lv nl no pl ru sv sw tr ur uz vi zh".split()
-    model_names_or_dirs = [
-        # "xlm-roberta-large",
-        "xlm-roberta-base",
-        # "bert-base-multilingual-cased",
-        "bert-base-multilingual-uncased",
-        # "distilbert-base-multilingual-cased",
-        # "xlm-mlm-100-1280"
-    ]
-    sent_rep_types = ["mean", "cls"]
+    langs = ["en_shuf"] + constants.xnli_extension_langs_all
+    model_names_or_dirs = constants.model_names_or_dirs_all
+    sent_rep_types = ["mean"]
 
     for model_name_or_dir in model_names_or_dirs:
+        # hack
+        if model_name_or_dir == "xlm-roberta-large":
+            batch_size = 500
+        else:
+            batch_size = 1000
+
+        savedir = f"{exp_dir}/{model_name_or_dir}/sentence_embeddings"
 
         print(f"Instantiating {model_name_or_dir}...")
         tokenizer_hf = AutoTokenizer.from_pretrained(model_name_or_dir)
         encoder_hf = AutoModel.from_pretrained(model_name_or_dir).cuda()  # cuda
 
-        savedir = f"{savedir_base}/{model_name_or_dir}/sent_reps/{data_name}"
         os.makedirs(savedir, exist_ok=True)
 
         for lang in langs:
-            data = read_data(
-                data_name=data_name,
-                folder=datadir,
-                lang_code=lang,
-                only_hypo=only_hypo,
-            )
+            data = read_data(exp_name=exp_name, exp_folder=exp_dir, lang_code=lang)
             data_encoded = extract_reps_sent(
                 data=data,
                 tokenizer_hf=tokenizer_hf,
@@ -65,13 +59,10 @@ if __name__ == "__main__":
                 batch_size=batch_size,
             )
 
-            # print(f"{lang} | mean sent reps size: {data_encoded['mean'].shape}")
-            # print(f"{lang} | cls sent reps size: {data_encoded['cls'].shape}")
-
-            savefile_path_base = f"{savedir}/{prefix}"
-
             for sent_rep_type in sent_rep_types:
                 pickle_dump_to_file(
                     data_encoded[sent_rep_type],
-                    f"{savefile_path_base}_sentemb_{sent_rep_type}.{lang}.pkl",
+                    f"{savedir}/sentemb-{sent_rep_type}-{lang}.pkl",
+                    verbose=False,
                 )
+        print("Extracted")

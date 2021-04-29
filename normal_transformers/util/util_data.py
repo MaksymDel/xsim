@@ -1,29 +1,50 @@
 import pickle
 import random
 
+from numpy import expand_dims
+
 random.seed(22)
 
 
-def read_data(data_name, folder, lang_code, max_lines=None, **kwargs):
-    if data_name == "xnli_extension":
+def read_data(exp_name, exp_folder, lang_code, max_lines=None):
+    data_folder = f"{exp_folder}/data"
+
+    if exp_name == "xnli_extension":
         return read_data_xnli_etension(
-            xnli_folder=folder, lang_code=lang_code, max_lines=max_lines, **kwargs
+            xnli_folder=data_folder,
+            lang_code=lang_code,
+            max_lines=max_lines,
+            only_hypo=False,
+        )
+    elif exp_name == "xnli_extension_onlyhyp":
+        data_folder = data_folder.replace("xnli_extension_onlyhyp", "xnli_extension")
+        return read_data_xnli_etension(
+            xnli_folder=data_folder,
+            lang_code=lang_code,
+            max_lines=max_lines,
+            only_hypo=True,
         )
 
-    elif data_name == "xnli_15way":
+    elif exp_name == "xnli_15way":
         return read_data_xnli_15way(
-            xnli_folder=folder, lang_code=lang_code, max_lines=max_lines, **kwargs
+            xnli_folder=data_folder, lang_code=lang_code, max_lines=max_lines
         )
 
     else:
-        raise ValueError(f"Worng data type: {data_name}")
+        raise ValueError(f"Worng exp type: {exp_name}")
 
 
-def read_data_xnli_15way(xnli_folder, lang_code, max_lines=None, **kwargs):
+def handle_shuffle_langcode(lang_code):
     shuffle = False
     if "_shuf" in lang_code:
         shuffle = True
         lang_code = lang_code[0:2]
+    return shuffle, lang_code
+
+
+def read_data_xnli_15way(xnli_folder, lang_code, max_lines=None):
+
+    shuffle, lang_code = handle_shuffle_langcode(lang_code)
 
     filename = f"xnli.15way.orig.tsv"
     filepath = f"{xnli_folder}/{filename}"
@@ -56,17 +77,12 @@ def read_data_xnli_15way(xnli_folder, lang_code, max_lines=None, **kwargs):
     return sentences
 
 
-def read_data_xnli_etension(
-    xnli_folder, lang_code, max_lines=None, only_hypo=False, **kwargs
-):
+def read_data_xnli_etension(xnli_folder, lang_code, max_lines=None, only_hypo=False):
     from sacremoses import MosesDetokenizer
 
     md = MosesDetokenizer(lang=lang_code)
 
-    shuffle = False
-    if "_shuf" in lang_code:
-        shuffle = True
-        lang_code = lang_code[0:2]
+    shuffle, lang_code = handle_shuffle_langcode(lang_code)
 
     filename = f"multinli.train.{lang_code}.tsv"
     filepath = f"{xnli_folder}/{filename}"
@@ -80,7 +96,7 @@ def read_data_xnli_etension(
                 continue
 
             l = l.split("\t")
-            s1, s2 = l[0], l[1]
+            s1, s2 = l[0].split(), l[1].split()  # md want a list of tokens
             s1, s2 = md.detokenize(s1), md.detokenize(s2)
 
             pairs.append((s1, s2))
@@ -101,7 +117,6 @@ def read_data_xnli_etension(
 
 
 def read_data_basic(filename_data, verbose=True):
-
     if verbose:
         print(f"Loading from {filename_data}")
 

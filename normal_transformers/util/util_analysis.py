@@ -46,7 +46,7 @@ def compute_similarity_all_layers(M1, M2, sim_name, skip_embedding_layer=True):
         if impl == "google":
             x = x.transpose(1, 0)
             y = y.transpose(1, 0)
-            print(x.shape, y.shape)
+            # print(x.shape, y.shape)
 
         score = compute_similarity_func(x, y, sim_name=sim_name)
 
