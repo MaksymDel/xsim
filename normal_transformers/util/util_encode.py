@@ -12,7 +12,7 @@ def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf):
         return_token_type_ids=False,
         return_attention_mask=True,
         truncation=True,
-        max_length=100
+        max_length=100,
     )
     # res
     for k, v in src.items():
@@ -37,17 +37,19 @@ def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf):
             )
             hiddens_all_layers = hf_model_output.encoder_hidden_states
 
-
     # he = [r.detach().cpu().numpy() for r in res['hidden_states']]
-
 
     sent_reps_all_layes_mean = []
     sent_reps_all_layes_cls = []
     for layer_num in range(len(hiddens_all_layers)):
         hiddens_curr_layer = hiddens_all_layers[layer_num]
 
-        sent_reps_curr_layer_mean = masked_mean(hiddens_curr_layer, src['attention_mask'].unsqueeze(2).bool(), 1)
-        sent_reps_all_layes_mean.append(sent_reps_curr_layer_mean.detach().cpu().numpy())
+        sent_reps_curr_layer_mean = masked_mean(
+            hiddens_curr_layer, src["attention_mask"].unsqueeze(2).bool(), 1
+        )
+        sent_reps_all_layes_mean.append(
+            sent_reps_curr_layer_mean.detach().cpu().numpy()
+        )
 
         sent_reps_curr_layer_cls = hiddens_curr_layer[:, 0]
         sent_reps_all_layes_cls.append(sent_reps_curr_layer_cls.detach().cpu().numpy())
@@ -55,12 +57,7 @@ def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf):
     return {"mean": sent_reps_all_layes_mean, "cls": sent_reps_all_layes_cls}
 
 
-def extract_reps_sent(
-        data,
-        tokenizer_hf,
-        encoder_hf,
-        batch_size
-):
+def extract_reps_sent(data, tokenizer_hf, encoder_hf, batch_size):
     # Sent embeddings
     encoded_sent_mean = []
     encoded_sent_cls = []
@@ -71,7 +68,7 @@ def extract_reps_sent(
         if it % 10 == 0:
             print(it)
 
-        batch = data[i:i + batch_size]
+        batch = data[i : i + batch_size]
         batch_sent_reps = extract_reps_sent_batch(batch, tokenizer_hf, encoder_hf)
 
         encoded_sent_mean.append(batch_sent_reps["mean"])
@@ -87,7 +84,7 @@ def extract_reps_sent(
 
 
 def masked_mean(
-        vector: torch.Tensor, mask: torch.BoolTensor, dim: int, keepdim: bool = False
+    vector: torch.Tensor, mask: torch.BoolTensor, dim: int, keepdim: bool = False
 ) -> torch.Tensor:
     """
     # taken from https://github.com/allenai/allennlp/blob/master/allennlp/nn/util.py

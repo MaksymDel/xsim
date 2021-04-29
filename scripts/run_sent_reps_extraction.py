@@ -1,14 +1,20 @@
 import os
 import sys
 
-sys.path.append('.')
+sys.path.append(".")
 
 from transformers import AutoModel, AutoTokenizer
-from normal_transformers.util.util_common import pickle_dump_to_file, read_data_xnli
+from normal_transformers.util.util_common import (
+    pickle_dump_to_file,
+    read_data,
+)
 from normal_transformers.util.util_encode import extract_reps_sent
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    # data_name = "xnli_extension"
+    data_name = "xnli_15way"
+
     only_hypo = True
 
     if not only_hypo:
@@ -20,11 +26,11 @@ if __name__ == '__main__':
 
     exp_folder = "experiments"
     savedir_base = f"{exp_folder}/assets/multilingual"
-    datadir = f"{exp_folder}/data"
+    datadir = f"{exp_folder}/data/{data_name}"
 
     # loop over
     langs = ["en", "ar", "az", "bg", "cs", "da", "en_shuf"]
-    #langs = ["en_shuf"]
+    # langs = ["en_shuf"]
     # langs = "ar az bg cs da de el en es et fi fr hi hu kk lt lv nl no pl ru sv sw tr ur uz vi zh".split()
     model_names_or_dirs = [
         # "xlm-roberta-large",
@@ -42,16 +48,21 @@ if __name__ == '__main__':
         tokenizer_hf = AutoTokenizer.from_pretrained(model_name_or_dir)
         encoder_hf = AutoModel.from_pretrained(model_name_or_dir).cuda()  # cuda
 
-        savedir = f"{savedir_base}/{model_name_or_dir}/xnli_encoded"
+        savedir = f"{savedir_base}/{model_name_or_dir}/sent_reps/{data_name}"
         os.makedirs(savedir, exist_ok=True)
 
         for lang in langs:
-            data = read_data_xnli(xnli_folder=datadir, lang_code=lang, only_hypo=only_hypo)
+            data = read_data(
+                data_name=data_name,
+                folder=datadir,
+                lang_code=lang,
+                only_hypo=only_hypo,
+            )
             data_encoded = extract_reps_sent(
                 data=data,
                 tokenizer_hf=tokenizer_hf,
                 encoder_hf=encoder_hf,
-                batch_size=batch_size
+                batch_size=batch_size,
             )
 
             # print(f"{lang} | mean sent reps size: {data_encoded['mean'].shape}")
@@ -60,5 +71,7 @@ if __name__ == '__main__':
             savefile_path_base = f"{savedir}/{prefix}"
 
             for sent_rep_type in sent_rep_types:
-                pickle_dump_to_file(data_encoded[sent_rep_type],
-                                    f"{savefile_path_base}_sentemb_{sent_rep_type}.{lang}.pkl")
+                pickle_dump_to_file(
+                    data_encoded[sent_rep_type],
+                    f"{savefile_path_base}_sentemb_{sent_rep_type}.{lang}.pkl",
+                )

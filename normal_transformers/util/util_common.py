@@ -4,7 +4,61 @@ import random
 random.seed(22)
 
 
-def read_data_xnli(xnli_folder, lang_code, max_lines=None, only_hypo=False):
+def read_data(data_name, folder, lang_code, max_lines=None, **kwargs):
+    if data_name == "xnli_extension":
+        return read_data_xnli_etension(
+            xnli_folder=folder, lang_code=lang_code, max_lines=max_lines, **kwargs
+        )
+
+    elif data_name == "xnli_15way":
+        return read_data_xnli_15way(
+            xnli_folder=folder, lang_code=lang_code, max_lines=max_lines, **kwargs
+        )
+
+    else:
+        raise ValueError(f"Worng data type: {data_name}")
+
+
+def read_data_xnli_15way(xnli_folder, lang_code, max_lines=None, **kwargs):
+    shuffle = False
+    if "_shuf" in lang_code:
+        shuffle = True
+        lang_code = lang_code[0:2]
+
+    filename = f"xnli.15way.orig.tsv"
+    filepath = f"{xnli_folder}/{filename}"
+
+    print(f"Loading from {filepath}")
+    sentences = []
+    lang_codes = []
+    tsv_lang_index = -1  # stub
+    with open(filepath, "r") as f:
+        for i, l in enumerate(f.readlines()):
+            l = l.strip()
+
+            if i == 0:
+                lang_codes = l.split("\t")
+                tsv_lang_index = lang_codes.index(lang_code)
+                continue
+
+            l = l.split("\t")
+            sent = l[tsv_lang_index]
+            sentences.append(sent)
+
+            if max_lines is not None and i == max_lines:
+                break
+    print("Loaded")
+
+    if shuffle:
+        print("Shuffling")
+        random.shuffle(sentences)
+
+    return sentences
+
+
+def read_data_xnli_etension(
+    xnli_folder, lang_code, max_lines=None, only_hypo=False, **kwargs
+):
     from sacremoses import MosesDetokenizer
 
     md = MosesDetokenizer(lang=lang_code)
@@ -21,6 +75,7 @@ def read_data_xnli(xnli_folder, lang_code, max_lines=None, only_hypo=False):
     pairs = []
     with open(filepath, "r") as f:
         for i, l in enumerate(f.readlines()):
+            l = l.strip()
             if i == 0:
                 continue
 
@@ -45,8 +100,7 @@ def read_data_xnli(xnli_folder, lang_code, max_lines=None, only_hypo=False):
     return pairs
 
 
-
-def read_data(filename_data, verbose=True):
+def read_data_basic(filename_data, verbose=True):
 
     if verbose:
         print(f"Loading from {filename_data}")
@@ -64,7 +118,7 @@ def read_data(filename_data, verbose=True):
 def pickle_dump_to_file(obj, fn, verbose=True):
     if verbose:
         print(f"Saving to {fn}")
-    with open(fn, 'wb') as f:
+    with open(fn, "wb") as f:
         pickle.dump(obj, f)
     if verbose:
         print("Saved")
@@ -73,7 +127,7 @@ def pickle_dump_to_file(obj, fn, verbose=True):
 def pickle_load_from_file(fn, verbose=True):
     if verbose:
         print(f"Loading from {fn}")
-    with open(fn, 'rb') as f:
+    with open(fn, "rb") as f:
         obj = pickle.load(f)
     if verbose:
         print("Loaded")

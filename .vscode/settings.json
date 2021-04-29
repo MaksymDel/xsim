@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "/home/maksym/.conda/envs/norm/bin/python",
+    "python.languageServer": "Pylance",
+    "python.linting.mypyEnabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black"
+}

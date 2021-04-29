@@ -4,7 +4,9 @@ from normal_transformers.analysis import google
 
 def compute_similarity_all_layers(M1, M2, sim_name, skip_embedding_layer=True):
     if not skip_embedding_layer:
-        raise NotImplementedError("Google's PWCCA and others fail to converge for uncontextual layer for some reason.")
+        raise NotImplementedError(
+            "Google's PWCCA and others fail to converge for uncontextual layer for some reason."
+        )
 
     def maybe_set_impl_type(sim_name, impl_type):
         prefix = f"{impl_type}_"
@@ -29,19 +31,22 @@ def compute_similarity_all_layers(M1, M2, sim_name, skip_embedding_layer=True):
 
     if M2.shape[1] > M1.shape[1]:
         print("Warning: shapes mismatch")
-        M2 = M2[:, 0:M1.shape[1], :]
+        M2 = M2[:, 0 : M1.shape[1], :]
     num_layers, num_examples, num_features = M1.shape
     sims = []
 
     for i in range(num_layers - 1):
         l = i + 1  # do not compute for uncontextual embeddings
-#    for l in range(num_layers):
+        #    for l in range(num_layers):
         x = M1[l]
         y = M2[l]
 
+        # x = x[:10000]
+        # y = y[:10000]
         if impl == "google":
             x = x.transpose(1, 0)
             y = y.transpose(1, 0)
+            print(x.shape, y.shape)
 
         score = compute_similarity_func(x, y, sim_name=sim_name)
 

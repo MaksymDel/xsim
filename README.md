@@ -40,9 +40,18 @@ install.packages("ggplot2")
 ## Fetch data
 ```
 cd experiments
+mkdir data
+cd data
+
+# xnli extension
 git clone https://github.com/salesforce/xnli_extension
-mv xnli_extension/data/ .
-rm -r xnli_extension
+mv xnli_extension/data/* xnli_extension
+
+# xnli 15way
+wget https://dl.fbaipublicfiles.com/XNLI/XNLI-15way.zip
+unzip XNLI-15way.zip
+rm XNLI-15way.zip
+mv XNLI-15way xnli_15way
 ```
 
 # run scripts

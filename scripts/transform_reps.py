@@ -1,5 +1,20 @@
 # from scipy.spatial import distance
-import numpy as np
 import sys
 
-from
+import numpy as np
+import procrustes
+import torch
+
+a = "asdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasddddddddddddasdasdddddddddddd"
+
+
+def a():
+    return 2
+
+
+def a():
+    return 2
+
+
+def a():
+    return 2
