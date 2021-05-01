@@ -21,21 +21,23 @@ def compute_similarity(acts1, acts2, verbose=False, epsilon=1e-10, sim_name="cka
         res = compute_svcca_similarity(
             acts1, acts2, K=k, verbose=verbose, epsilon=epsilon
         )
-        # return res["mean"][0]
-        return np.mean(res["cca_coef1"][0:20])
+        return res["mean"][0]
+        # return np.mean(res["cca_coef1"][0:20])
     elif "pwcca" in sim_name:
         print(f"computing pwcca")
         pwcca_mean, w, __ = pwcca.compute_pwcca(acts1, acts2, epsilon=epsilon)
         return pwcca_mean
     elif "cka" in sim_name:
-        print(f"computing cka")
+        # print(f"computing cka")
         return feature_space_linear_cka(acts1.transpose(1, 0), acts2.transpose(1, 0))
     elif "cca" in sim_name:
         print(f"computing cca")
         res = cca_core.get_cca_similarity(
             acts1, acts2, epsilon=epsilon, compute_coefs=False, verbose=False
         )
-        return res["mean"][0]  # contains two times the same value.
+        # return np.mean(res["cca_coef1"][0:200])  # res["mean"][0]
+        return res["mean"][0]
+
     else:
         raise NotImplementedError(sim_name)
 

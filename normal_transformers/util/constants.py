@@ -1,4 +1,4 @@
-exp_names_all = ["xnli_extension", "onlyhypo_xnli_extension", "xnli_15way"]
+exp_names_all = ["xnli_extension", "xnli_extension_onlyhyp", "xnli_15way"]
 sent_rep_types_all = ["mean", "cls"]
 similarities_all = ["cca", "pwcca", "svcca", "cka"]
 
@@ -12,6 +12,7 @@ model_names_or_dirs_all = [
 ]
 
 xnli_langs_all = "ar az bg cs da de el en es et fi fr hi hu kk lt lv nl no pl ru sv sw tr ur uz vi zh".split()
+xnli_extension_langs_7 = ["en", "en_shuf", "ar", "az", "bg", "cs", "da"]
 xnli_extension_langs_all = [
     "no",
     "uz",

@@ -51,7 +51,7 @@ def compute_similarity_all_layers(M1, M2, sim_name, skip_embedding_layer=True):
         score = compute_similarity_func(x, y, sim_name=sim_name)
 
         sims.append(score)
-        print(f"layer: {l}: {score}")
+        # print(f"layer: {l}: {score}")
     return sims
 
 

@@ -26,21 +26,37 @@ from normal_transformers.util import constants
 #     "xlm-mlm-100-1280",
 # ]
 
+
 if __name__ == "__main__":
     exp_name = sys.argv[1]
     assert exp_name in constants.exp_names_all
     exp_dir = f"experiments/{exp_name}"
 
-    langs = ["en_shuf"] + constants.xnli_extension_langs_all
-    model_names_or_dirs = constants.model_names_or_dirs_all
+    # langs = ["en_shuf"] + constants.xnli_extension_langs_all
+    # model_names_or_dirs = constants.model_names_or_dirs_all
+
+    batch_size = 1000
+    model_names_or_dirs = [
+        # "bert-base-multilingual-uncased",
+        # "bert-base-multilingual-cased",
+        "xlm-roberta-base",
+        # "distilbert-base-multilingual-cased",
+        # "xlm-roberta-large",
+        # "xlm-mlm-100-1280",
+    ]
+    langs = [
+        "en",
+        "en_shuf",
+        "ar",
+        "az",
+        "bg",
+        "cs",
+        "da",
+    ]  # constants.xnli_extension_langs_7
+    langs = constants.xnli_extension_langs_all
     sent_rep_types = ["mean"]
 
     for model_name_or_dir in model_names_or_dirs:
-        # hack
-        if model_name_or_dir == "xlm-roberta-large":
-            batch_size = 500
-        else:
-            batch_size = 1000
 
         savedir = f"{exp_dir}/{model_name_or_dir}/sentence_embeddings"
 
