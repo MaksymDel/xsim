@@ -44,3 +44,5 @@ xnli_extension_langs_all = [
     "kk",
     "sw",
 ]
+
+domain_names = ["Europarl", "OpenSubtitles", "JRC-Acquis", "EMEA"]

@@ -14,7 +14,10 @@ def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf):
         truncation=True,
         max_length=100,
     )
+    # src["input_ids"] = src["decoder_input_ids"]
+    # src["decoder_input_ids"] = None
     # res
+    # print(src)
     for k, v in src.items():
         src[k] = v.to(encoder_hf.device)
 
@@ -27,15 +30,34 @@ def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf):
                 # output_attentions=True,
             )
             hiddens_all_layers = hf_model_output.hidden_states
+            # hiddens_all_layers = (
+            #     hf_model_output.encoder_hidden_states
+            #     + hf_model_output.decoder_hidden_states
+            # )
+            # print(len(hiddens_all_layers))
+
+            # encoder_hf_output = encoder_hf.generate(
+            #     **src,
+            #     # return_dict=True,
+            #     output_hidden_states=True,
+            #     output_attentions=True,
+            #     do_sample=False,
+            #     num_beams=1
+            # )
+
+            # hiddens_all_layers = list(
+            #     encoder_hf_output["encoder_hidden_states"]
+            # )  # + list(encoder_hf_output["decoder_hidden_states"])
 
         except ValueError:
-            hf_model_output = encoder_hf.encoder.forward(
-                **src,
-                return_dict=True,
-                output_hidden_states=True,
-                # output_attentions=True,
-            )
-            hiddens_all_layers = hf_model_output.encoder_hidden_states
+            raise ValueError
+            # hf_model_output = encoder_hf.encoder.forward(
+            #     **src,
+            #     return_dict=True,
+            #     output_hidden_states=True,
+            #     # output_attentions=True,
+            # )
+            # hiddens_all_layers = hf_model_output.encoder_hidden_states
 
     # he = [r.detach().cpu().numpy() for r in res['hidden_states']]
 
@@ -47,6 +69,8 @@ def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf):
         sent_reps_curr_layer_mean = masked_mean(
             hiddens_curr_layer, src["attention_mask"].unsqueeze(2).bool(), 1
         )
+        # sent_reps_curr_layer_mean = hiddens_curr_layer.mean(1)
+
         sent_reps_all_layes_mean.append(
             sent_reps_curr_layer_mean.detach().cpu().numpy()
         )
