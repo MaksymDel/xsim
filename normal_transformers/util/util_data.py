@@ -33,17 +33,69 @@ def read_data(exp_name, exp_folder, lang_code, max_lines=None):
         raise ValueError(f"Worng exp type: {exp_name}")
 
 
+
+
+def read_data_four_domains(
+    lang_pair,
+    exp_folder,
+    domain_name,
+    bpe_applied=False,
+    max_lines=None):
+    if lang_pair == "en-et":
+        return read_data_four_domains_en_et(
+                exp_folder,
+                domain_name, 
+                bpe_applied, 
+                max_lines)
+    elif lang_pair == "de-en":
+        return read_data_four_domains_de_en(
+                exp_folder,
+                domain_name, 
+                bpe_applied, 
+                max_lines)
+    else:
+        raise NotImplementedError
+    
+
+
 def read_data_four_domains_en_et(
     exp_folder,
     domain_name,
     bpe_applied=False,
-    max_lines=None,
-):
+    max_lines=None):
     data_folder = f"{exp_folder}/data"
     if bpe_applied:
         filename = f"sp-cl-{domain_name}.en-et.docs.dev.en"
     else:
         filename = f"cl-{domain_name}.en-et.docs.dev.en"
+
+    filepath = f"{data_folder}/{filename}"
+
+    print(f"Loading from {filepath}")
+    lines = []
+    with open(filepath, "r") as f:
+        for i, l in enumerate(f.readlines()):
+            l = l.strip()
+            lines.append(l)
+
+            if max_lines is not None and i == max_lines:
+                break
+    print("Loaded")
+
+    return lines
+
+
+
+def read_data_four_domains_de_en(
+    exp_folder,
+    domain_name,
+    bpe_applied=False,
+    max_lines=None):
+    data_folder = f"{exp_folder}/data"
+    if bpe_applied:
+        filename = f"sp-cl-{domain_name}.de-en.docs.dev-cl.de"
+    else:
+        filename = f"cl-{domain_name}.de-en.docs.dev-cl.de"
 
     filepath = f"{data_folder}/{filename}"
 

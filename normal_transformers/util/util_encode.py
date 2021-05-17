@@ -1,9 +1,11 @@
+from os import execle
 import numpy as np
 import torch
 from transformers.modeling_outputs import BaseModelOutput
+import pdb
 
 
-def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf):
+def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf, is_encoder_decoder=False):
     # tok
     src = tokenizer_hf.batch_encode_plus(
         src,
@@ -22,66 +24,46 @@ def extract_reps_sent_batch(src, tokenizer_hf, encoder_hf):
         src[k] = v.to(encoder_hf.device)
 
     with torch.no_grad():
-        try:
-            hf_model_output = encoder_hf.forward(
-                **src,
-                return_dict=True,
-                output_hidden_states=True,
-                # output_attentions=True,
-            )
+        hf_model_output = encoder_hf.forward(
+            **src,
+            return_dict=True,
+            output_hidden_states=True,
+            # output_attentions=True,
+        )
+        # pdb.set_trace()
+        if not is_encoder_decoder:
             hiddens_all_layers = hf_model_output.hidden_states
-            # hiddens_all_layers = (
-            #     hf_model_output.encoder_hidden_states
-            #     + hf_model_output.decoder_hidden_states
-            # )
-            # print(len(hiddens_all_layers))
+        else:
 
-            # encoder_hf_output = encoder_hf.generate(
-            #     **src,
-            #     # return_dict=True,
-            #     output_hidden_states=True,
-            #     output_attentions=True,
-            #     do_sample=False,
-            #     num_beams=1
-            # )
-
-            # hiddens_all_layers = list(
-            #     encoder_hf_output["encoder_hidden_states"]
-            # )  # + list(encoder_hf_output["decoder_hidden_states"])
-
-        except ValueError:
-            raise ValueError
-            # hf_model_output = encoder_hf.encoder.forward(
-            #     **src,
-            #     return_dict=True,
-            #     output_hidden_states=True,
-            #     # output_attentions=True,
-            # )
-            # hiddens_all_layers = hf_model_output.encoder_hidden_states
-
-    # he = [r.detach().cpu().numpy() for r in res['hidden_states']]
+            hiddens_all_layers = (
+                hf_model_output.encoder_hidden_states
+                + hf_model_output.decoder_hidden_states
+            )
 
     sent_reps_all_layes_mean = []
     sent_reps_all_layes_cls = []
     for layer_num in range(len(hiddens_all_layers)):
         hiddens_curr_layer = hiddens_all_layers[layer_num]
+        sent_reps_curr_layer_cls = hiddens_curr_layer[:, 0]
 
-        sent_reps_curr_layer_mean = masked_mean(
-            hiddens_curr_layer, src["attention_mask"].unsqueeze(2).bool(), 1
-        )
-        # sent_reps_curr_layer_mean = hiddens_curr_layer.mean(1)
+        if not is_encoder_decoder:
+            sent_reps_curr_layer_mean = masked_mean(
+                hiddens_curr_layer, src["attention_mask"].unsqueeze(2).bool(), 1
+            )
+        else:
+            sent_reps_curr_layer_mean = hiddens_curr_layer.mean(1)
 
+        sent_reps_all_layes_cls.append(sent_reps_curr_layer_cls.detach().cpu().numpy())
         sent_reps_all_layes_mean.append(
             sent_reps_curr_layer_mean.detach().cpu().numpy()
         )
 
-        sent_reps_curr_layer_cls = hiddens_curr_layer[:, 0]
-        sent_reps_all_layes_cls.append(sent_reps_curr_layer_cls.detach().cpu().numpy())
-
     return {"mean": sent_reps_all_layes_mean, "cls": sent_reps_all_layes_cls}
 
 
-def extract_reps_sent(data, tokenizer_hf, encoder_hf, batch_size):
+def extract_reps_sent(
+    data, tokenizer_hf, encoder_hf, batch_size, is_encoder_decoder=False
+):
     # Sent embeddings
     encoded_sent_mean = []
     encoded_sent_cls = []
@@ -93,7 +75,9 @@ def extract_reps_sent(data, tokenizer_hf, encoder_hf, batch_size):
             print(it)
 
         batch = data[i : i + batch_size]
-        batch_sent_reps = extract_reps_sent_batch(batch, tokenizer_hf, encoder_hf)
+        batch_sent_reps = extract_reps_sent_batch(
+            batch, tokenizer_hf, encoder_hf, is_encoder_decoder=is_encoder_decoder
+        )
 
         encoded_sent_mean.append(batch_sent_reps["mean"])
         encoded_sent_cls.append(batch_sent_reps["cls"])
@@ -101,9 +85,11 @@ def extract_reps_sent(data, tokenizer_hf, encoder_hf, batch_size):
         it += 1
 
     # num_layers x num_examples x num_features
-    encoded_sent_mean = np.concatenate(encoded_sent_mean, 1)
-    encoded_sent_cls = np.concatenate(encoded_sent_cls, 1)
-
+    try:
+        encoded_sent_mean = np.concatenate(encoded_sent_mean, 1)
+        encoded_sent_cls = np.concatenate(encoded_sent_cls, 1)
+    except:
+        pdb.set_trace()
     return {"mean": encoded_sent_mean, "cls": encoded_sent_cls}
 
 
