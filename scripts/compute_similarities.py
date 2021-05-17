@@ -67,13 +67,16 @@ if __name__ == "__main__":
 
     exp_name = "xnli_extension"
     # model_name_or_dir = "bert-base-multilingual-cased"
-    model_name_or_dir = "xlm-roberta-base"
+    model_name_or_dir = "distilbert-base-multilingual-cased"
     sim_name = "google_cka"
     sent_rep_type = "mean"
 
     all_pairs = list(itertools.combinations(constants.xnli_extension_langs_all, 2)) + [
         (l, l) for l in constants.xnli_extension_langs_all
     ]
+    all_pairs = ["en_ar", "en_az", "en_bg", "en_cs", "en_da"]
+    all_pairs = [p.split("_") for p in all_pairs]
+
     num_pairs = len(all_pairs)
     for i, pair in enumerate(all_pairs):
         print(f" {pair}: {i} / {num_pairs}")

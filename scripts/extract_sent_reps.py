@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(".")
 
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModel, AutoTokenizer, AutoConfig
 from normal_transformers.util.util_data import (
     pickle_dump_to_file,
     read_data,
@@ -39,10 +39,11 @@ if __name__ == "__main__":
     model_names_or_dirs = [
         # "bert-base-multilingual-uncased",
         # "bert-base-multilingual-cased",
-        "xlm-roberta-base",
+        # "xlm-roberta-base",
         # "distilbert-base-multilingual-cased",
         # "xlm-roberta-large",
         # "xlm-mlm-100-1280",
+        ""
     ]
     langs = [
         "en",
@@ -63,6 +64,9 @@ if __name__ == "__main__":
         print(f"Instantiating {model_name_or_dir}...")
         tokenizer_hf = AutoTokenizer.from_pretrained(model_name_or_dir)
         encoder_hf = AutoModel.from_pretrained(model_name_or_dir).cuda()  # cuda
+        is_encoder_decoder = AutoConfig.from_pretrained(
+            model_name_or_dir
+        ).is_encoder_decoder
 
         os.makedirs(savedir, exist_ok=True)
 
@@ -73,6 +77,7 @@ if __name__ == "__main__":
                 tokenizer_hf=tokenizer_hf,
                 encoder_hf=encoder_hf,
                 batch_size=batch_size,
+                is_encoder_decoder=is_encoder_decoder,
             )
 
             for sent_rep_type in sent_rep_types:
