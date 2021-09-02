@@ -1,7 +1,9 @@
 # BERTology
 
 ## Interlingua in Multilingual Language Models Revised
-[Notebook: Interlingua in Multilingual Language Models Revised](examplesmultilingual-case_study.ipynb)
+Please follow the link below:
+
+[Notebook: Interlingua in Multilingual Language Models Revised](examples/multilingual-case_study.ipynb)
 
 
 ## Installation
