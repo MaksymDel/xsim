@@ -1,17 +1,8 @@
-# normal-transformers
-**_"Normalization is all you need."_**
+# BERTology
 
-...in case of Multi-task, Multi-domain, or Multilingual Transformers.
+## Interlingua in Multilingual Language Models Revised
+[Notebook: Interlingua in Multilingual Language Models Revised](examplesmultilingual-case_study.ipynb)
 
-## Structure
-This library consists of the following modules:
-* **Modeling:** code for different Transformer variants
-* **Training:** code to train Transformers
-* **Encoding**: code to extract representations from trained Transformer
-* **Analysis**: code to analyse extracted representations
-* **Plotting**: code for unified plots to represent analysis results
-
-Additional folders include **Tests** and **Examples**.
 
 ## Installation
 ```
@@ -58,11 +49,10 @@ rm XNLI-15way.zip
 mv XNLI-15way xnli_15way/data
 ```
 
-# run scripts
+# Run scripts
 ```
 CUDA_VISIBLE_DEVICES=1 python scripts/run_sent_reps_extraction.py xnli_extension
 bash scripts/compute_metrics_parallel.sh
 ```
 
-
-Now you can run analysis notebooks to reproduce plots.
+Now you can run analysis from the `notebooks` forlder and reproduce the plots.
