@@ -1,5 +1,5 @@
 ## Interlingua in Multilingual Language Models Revised
-Please follow the link below:
+Notebook with results:
 
 [Notebook: Interlingua in Multilingual Language Models Revised](examples/multilingual-case_study.ipynb)
 
