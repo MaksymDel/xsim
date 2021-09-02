@@ -1,5 +1,3 @@
-# BERTology
-
 ## Interlingua in Multilingual Language Models Revised
 Please follow the link below:
 
