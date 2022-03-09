@@ -6,6 +6,16 @@
 
 ## Installation
 ```
+srun -p gpu --gres gpu:a100-80g --mem=120G -t 192:00:00 --pty bash
+srun -p gpu --gres gpu:a100-40g --mem=120G -t 192:00:00 --pty bash
+
+module load any/python/3.8.3-conda
+module load cuda/11.3.1
+conda activate paper3
+
+jupyter notebook --no-browser --port 1234
+ssh -NL 1234:localhost:1234 maksym95@rocket.hpc.ut.ee
+
 conda create -n norm python=3.8
 conda activate norm
 

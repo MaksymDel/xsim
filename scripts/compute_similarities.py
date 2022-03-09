@@ -16,9 +16,9 @@ from normal_transformers.util import constants
 
 
 def main(exp_name, model_name_or_dir, sim_name, sent_rep_type, lang_pair, verbose=True):
-    assert exp_name in constants.exp_names_all
+    #assert exp_name in constants.exp_names_all
     assert sent_rep_type in constants.sent_rep_types_all
-    assert model_name_or_dir in constants.model_names_or_dirs_all
+    #assert model_name_or_dir in constants.model_names_or_dirs_all
 
     check = False
     for nm in constants.similarities_all:
@@ -65,16 +65,19 @@ if __name__ == "__main__":
     # lang_pair = sys.argv[5]
     # main(exp_name, model_name_or_dir, sim_name, sent_rep_type, lang_pair)
 
-    exp_name = "xnli_extension"
+    exp_name = "multilingual/xnli_extension"
     # model_name_or_dir = "bert-base-multilingual-cased"
-    model_name_or_dir = "distilbert-base-multilingual-cased"
+    #model_name_or_dir = "distilbert-base-multilingual-cased"
+    #model_name_or_dir = "xlm-roberta-base"
+    #model_name_or_dir = "facebook/xlm-roberta-xl"
+    model_name_or_dir = "facebook/xlm-roberta-xxl"
     sim_name = "google_cka"
     sent_rep_type = "mean"
 
     all_pairs = list(itertools.combinations(constants.xnli_extension_langs_all, 2)) + [
         (l, l) for l in constants.xnli_extension_langs_all
     ]
-    all_pairs = ["en_ar", "en_az", "en_bg", "en_cs", "en_da"]
+    all_pairs = ["en_ar", "en_az", "en_cs", "en_da"]
     all_pairs = [p.split("_") for p in all_pairs]
 
     num_pairs = len(all_pairs)

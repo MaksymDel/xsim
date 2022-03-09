@@ -9,11 +9,11 @@ import sys
 
 sys.path.insert(0, "third_party/svcca")
 
-import cca_core
+# import cca_core
 
 
 def compute_similarity(acts1, acts2, verbose=False, epsilon=1e-10, sim_name="cka"):
-    import pwcca
+    
 
     if "svcca" in sim_name:
         k = int(sim_name.split("_")[1])
@@ -24,6 +24,7 @@ def compute_similarity(acts1, acts2, verbose=False, epsilon=1e-10, sim_name="cka
         return res["mean"][0]
         # return np.mean(res["cca_coef1"][0:20])
     elif "pwcca" in sim_name:
+        import pwcca
         print(f"computing pwcca")
         pwcca_mean, w, __ = pwcca.compute_pwcca(acts1, acts2, epsilon=epsilon)
         return pwcca_mean

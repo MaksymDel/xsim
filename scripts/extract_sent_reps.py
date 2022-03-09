@@ -30,31 +30,42 @@ from normal_transformers.util import constants
 if __name__ == "__main__":
     exp_name = sys.argv[1]
     assert exp_name in constants.exp_names_all
-    exp_dir = f"experiments/{exp_name}"
+    exp_dir = f"experiments/multilingual/{exp_name}"
 
     # langs = ["en_shuf"] + constants.xnli_extension_langs_all
     # model_names_or_dirs = constants.model_names_or_dirs_all
 
-    batch_size = 1000
+    batch_size = 100
     model_names_or_dirs = [
         # "bert-base-multilingual-uncased",
         # "bert-base-multilingual-cased",
-        # "xlm-roberta-base",
+        #"xlm-roberta-base",
         # "distilbert-base-multilingual-cased",
-        # "xlm-roberta-large",
+        #"xlm-roberta-large",
+        # "facebook/xlm-roberta-xl",
+        "facebook/xlm-roberta-xxl",
+        # "facebook/xglm-564M",
+        # "facebook/xglm-1.7B"
         # "xlm-mlm-100-1280",
-        ""
     ]
     langs = [
-        "en",
-        "en_shuf",
+ #       "en",
+        # "en_shuf",
         "ar",
         "az",
-        "bg",
+#        "bg",
         "cs",
         "da",
     ]  # constants.xnli_extension_langs_7
-    langs = constants.xnli_extension_langs_all
+    # langs = [
+    #     "en",
+    #     # "en_shuf",
+    #     "bg",
+    #     "ru",
+    #     "de",
+    #     "fi"
+    # ]  # constants.xnli_extension_langs_7
+    #langs = constants.xnli_extension_langs_all
     sent_rep_types = ["mean"]
 
     for model_name_or_dir in model_names_or_dirs:

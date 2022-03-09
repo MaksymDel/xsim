@@ -1,0 +1,199 @@
+[0;31mSignature:[0m
+[0msns[0m[0;34m.[0m[0mpairplot[0m[0;34m([0m[0;34m[0m
+[0;34m[0m    [0mdata[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0;34m*[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mhue[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mhue_order[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mpalette[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mvars[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mx_vars[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0my_vars[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mkind[0m[0;34m=[0m[0;34m'scatter'[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mdiag_kind[0m[0;34m=[0m[0;34m'auto'[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mmarkers[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mheight[0m[0;34m=[0m[0;36m2.5[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0maspect[0m[0;34m=[0m[0;36m1[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mcorner[0m[0;34m=[0m[0;32mFalse[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mdropna[0m[0;34m=[0m[0;32mFalse[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mplot_kws[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mdiag_kws[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mgrid_kws[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0msize[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;31mSource:[0m   
+[0;34m@[0m[0m_deprecate_positional_args[0m[0;34m[0m
+[0;34m[0m[0;32mdef[0m [0mpairplot[0m[0;34m([0m[0;34m[0m
+[0;34m[0m    [0mdata[0m[0;34m,[0m [0;34m*[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mhue[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m [0mhue_order[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m [0mpalette[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mvars[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m [0mx_vars[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m [0my_vars[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mkind[0m[0;34m=[0m[0;34m"scatter"[0m[0;34m,[0m [0mdiag_kind[0m[0;34m=[0m[0;34m"auto"[0m[0;34m,[0m [0mmarkers[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mheight[0m[0;34m=[0m[0;36m2.5[0m[0;34m,[0m [0maspect[0m[0;34m=[0m[0;36m1[0m[0;34m,[0m [0mcorner[0m[0;34m=[0m[0;32mFalse[0m[0;34m,[0m [0mdropna[0m[0;34m=[0m[0;32mFalse[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mplot_kws[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m [0mdiag_kws[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m [0mgrid_kws[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m [0msize[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m[0;34m)[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m    [0;34m"""Plot pairwise relationships in a dataset.[0m
+[0;34m[0m
+[0;34m    By default, this function will create a grid of Axes such that each numeric[0m
+[0;34m    variable in ``data`` will by shared across the y-axes across a single row and[0m
+[0;34m    the x-axes across a single column. The diagonal plots are treated[0m
+[0;34m    differently: a univariate distribution plot is drawn to show the marginal[0m
+[0;34m    distribution of the data in each column.[0m
+[0;34m[0m
+[0;34m    It is also possible to show a subset of variables or plot different[0m
+[0;34m    variables on the rows and columns.[0m
+[0;34m[0m
+[0;34m    This is a high-level interface for :class:`PairGrid` that is intended to[0m
+[0;34m    make it easy to draw a few common styles. You should use :class:`PairGrid`[0m
+[0;34m    directly if you need more flexibility.[0m
+[0;34m[0m
+[0;34m    Parameters[0m
+[0;34m    ----------[0m
+[0;34m    data : `pandas.DataFrame`[0m
+[0;34m        Tidy (long-form) dataframe where each column is a variable and[0m
+[0;34m        each row is an observation.[0m
+[0;34m    hue : name of variable in ``data``[0m
+[0;34m        Variable in ``data`` to map plot aspects to different colors.[0m
+[0;34m    hue_order : list of strings[0m
+[0;34m        Order for the levels of the hue variable in the palette[0m
+[0;34m    palette : dict or seaborn color palette[0m
+[0;34m        Set of colors for mapping the ``hue`` variable. If a dict, keys[0m
+[0;34m        should be values  in the ``hue`` variable.[0m
+[0;34m    vars : list of variable names[0m
+[0;34m        Variables within ``data`` to use, otherwise use every column with[0m
+[0;34m        a numeric datatype.[0m
+[0;34m    {x, y}_vars : lists of variable names[0m
+[0;34m        Variables within ``data`` to use separately for the rows and[0m
+[0;34m        columns of the figure; i.e. to make a non-square plot.[0m
+[0;34m    kind : {'scatter', 'kde', 'hist', 'reg'}[0m
+[0;34m        Kind of plot to make.[0m
+[0;34m    diag_kind : {'auto', 'hist', 'kde', None}[0m
+[0;34m        Kind of plot for the diagonal subplots. If 'auto', choose based on[0m
+[0;34m        whether or not ``hue`` is used.[0m
+[0;34m    markers : single matplotlib marker code or list[0m
+[0;34m        Either the marker to use for all scatterplot points or a list of markers[0m
+[0;34m        with a length the same as the number of levels in the hue variable so that[0m
+[0;34m        differently colored points will also have different scatterplot[0m
+[0;34m        markers.[0m
+[0;34m    height : scalar[0m
+[0;34m        Height (in inches) of each facet.[0m
+[0;34m    aspect : scalar[0m
+[0;34m        Aspect * height gives the width (in inches) of each facet.[0m
+[0;34m    corner : bool[0m
+[0;34m        If True, don't add axes to the upper (off-diagonal) triangle of the[0m
+[0;34m        grid, making this a "corner" plot.[0m
+[0;34m    dropna : boolean[0m
+[0;34m        Drop missing values from the data before plotting.[0m
+[0;34m    {plot, diag, grid}_kws : dicts[0m
+[0;34m        Dictionaries of keyword arguments. ``plot_kws`` are passed to the[0m
+[0;34m        bivariate plotting function, ``diag_kws`` are passed to the univariate[0m
+[0;34m        plotting function, and ``grid_kws`` are passed to the :class:`PairGrid`[0m
+[0;34m        constructor.[0m
+[0;34m[0m
+[0;34m    Returns[0m
+[0;34m    -------[0m
+[0;34m    grid : :class:`PairGrid`[0m
+[0;34m        Returns the underlying :class:`PairGrid` instance for further tweaking.[0m
+[0;34m[0m
+[0;34m    See Also[0m
+[0;34m    --------[0m
+[0;34m    PairGrid : Subplot grid for more flexible plotting of pairwise relationships.[0m
+[0;34m    JointGrid : Grid for plotting joint and marginal distributions of two variables.[0m
+[0;34m[0m
+[0;34m    Examples[0m
+[0;34m    --------[0m
+[0;34m[0m
+[0;34m    .. include:: ../docstrings/pairplot.rst[0m
+[0;34m[0m
+[0;34m    """[0m[0;34m[0m
+[0;34m[0m    [0;31m# Avoid circular import[0m[0;34m[0m
+[0;34m[0m    [0;32mfrom[0m [0;34m.[0m[0mdistributions[0m [0;32mimport[0m [0mhistplot[0m[0;34m,[0m [0mkdeplot[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;31m# Handle deprecations[0m[0;34m[0m
+[0;34m[0m    [0;32mif[0m [0msize[0m [0;32mis[0m [0;32mnot[0m [0;32mNone[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0mheight[0m [0;34m=[0m [0msize[0m[0;34m[0m
+[0;34m[0m        [0mmsg[0m [0;34m=[0m [0;34m([0m[0;34m"The `size` parameter has been renamed to `height`; "[0m[0;34m[0m
+[0;34m[0m               [0;34m"please update your code."[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m        [0mwarnings[0m[0;34m.[0m[0mwarn[0m[0;34m([0m[0mmsg[0m[0;34m,[0m [0mUserWarning[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;32mif[0m [0;32mnot[0m [0misinstance[0m[0;34m([0m[0mdata[0m[0;34m,[0m [0mpd[0m[0;34m.[0m[0mDataFrame[0m[0;34m)[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0;32mraise[0m [0mTypeError[0m[0;34m([0m[0;34m[0m
+[0;34m[0m            [0;34m"'data' must be pandas DataFrame object, not: {typefound}"[0m[0;34m.[0m[0mformat[0m[0;34m([0m[0;34m[0m
+[0;34m[0m                [0mtypefound[0m[0;34m=[0m[0mtype[0m[0;34m([0m[0mdata[0m[0;34m)[0m[0;34m)[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0mplot_kws[0m [0;34m=[0m [0;34m{[0m[0;34m}[0m [0;32mif[0m [0mplot_kws[0m [0;32mis[0m [0;32mNone[0m [0;32melse[0m [0mplot_kws[0m[0;34m.[0m[0mcopy[0m[0;34m([0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0mdiag_kws[0m [0;34m=[0m [0;34m{[0m[0;34m}[0m [0;32mif[0m [0mdiag_kws[0m [0;32mis[0m [0;32mNone[0m [0;32melse[0m [0mdiag_kws[0m[0;34m.[0m[0mcopy[0m[0;34m([0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0mgrid_kws[0m [0;34m=[0m [0;34m{[0m[0;34m}[0m [0;32mif[0m [0mgrid_kws[0m [0;32mis[0m [0;32mNone[0m [0;32melse[0m [0mgrid_kws[0m[0;34m.[0m[0mcopy[0m[0;34m([0m[0;34m)[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;31m# Resolve "auto" diag kind[0m[0;34m[0m
+[0;34m[0m    [0;32mif[0m [0mdiag_kind[0m [0;34m==[0m [0;34m"auto"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0;32mif[0m [0mhue[0m [0;32mis[0m [0;32mNone[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m            [0mdiag_kind[0m [0;34m=[0m [0;34m"kde"[0m [0;32mif[0m [0mkind[0m [0;34m==[0m [0;34m"kde"[0m [0;32melse[0m [0;34m"hist"[0m[0;34m[0m
+[0;34m[0m        [0;32melse[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m            [0mdiag_kind[0m [0;34m=[0m [0;34m"hist"[0m [0;32mif[0m [0mkind[0m [0;34m==[0m [0;34m"hist"[0m [0;32melse[0m [0;34m"kde"[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;31m# Set up the PairGrid[0m[0;34m[0m
+[0;34m[0m    [0mgrid_kws[0m[0;34m.[0m[0msetdefault[0m[0;34m([0m[0;34m"diag_sharey"[0m[0;34m,[0m [0mdiag_kind[0m [0;34m==[0m [0;34m"hist"[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0mgrid[0m [0;34m=[0m [0mPairGrid[0m[0;34m([0m[0mdata[0m[0;34m,[0m [0mvars[0m[0;34m=[0m[0mvars[0m[0;34m,[0m [0mx_vars[0m[0;34m=[0m[0mx_vars[0m[0;34m,[0m [0my_vars[0m[0;34m=[0m[0my_vars[0m[0;34m,[0m [0mhue[0m[0;34m=[0m[0mhue[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m                    [0mhue_order[0m[0;34m=[0m[0mhue_order[0m[0;34m,[0m [0mpalette[0m[0;34m=[0m[0mpalette[0m[0;34m,[0m [0mcorner[0m[0;34m=[0m[0mcorner[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m                    [0mheight[0m[0;34m=[0m[0mheight[0m[0;34m,[0m [0maspect[0m[0;34m=[0m[0maspect[0m[0;34m,[0m [0mdropna[0m[0;34m=[0m[0mdropna[0m[0;34m,[0m [0;34m**[0m[0mgrid_kws[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;31m# Add the markers here as PairGrid has figured out how many levels of the[0m[0;34m[0m
+[0;34m[0m    [0;31m# hue variable are needed and we don't want to duplicate that process[0m[0;34m[0m
+[0;34m[0m    [0;32mif[0m [0mmarkers[0m [0;32mis[0m [0;32mnot[0m [0;32mNone[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0;32mif[0m [0mkind[0m [0;34m==[0m [0;34m"reg"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m            [0;31m# Needed until regplot supports style[0m[0;34m[0m
+[0;34m[0m            [0;32mif[0m [0mgrid[0m[0;34m.[0m[0mhue_names[0m [0;32mis[0m [0;32mNone[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m                [0mn_markers[0m [0;34m=[0m [0;36m1[0m[0;34m[0m
+[0;34m[0m            [0;32melse[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m                [0mn_markers[0m [0;34m=[0m [0mlen[0m[0;34m([0m[0mgrid[0m[0;34m.[0m[0mhue_names[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m            [0;32mif[0m [0;32mnot[0m [0misinstance[0m[0;34m([0m[0mmarkers[0m[0;34m,[0m [0mlist[0m[0;34m)[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m                [0mmarkers[0m [0;34m=[0m [0;34m[[0m[0mmarkers[0m[0;34m][0m [0;34m*[0m [0mn_markers[0m[0;34m[0m
+[0;34m[0m            [0;32mif[0m [0mlen[0m[0;34m([0m[0mmarkers[0m[0;34m)[0m [0;34m!=[0m [0mn_markers[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m                [0;32mraise[0m [0mValueError[0m[0;34m([0m[0;34m([0m[0;34m"markers must be a singleton or a list of "[0m[0;34m[0m
+[0;34m[0m                                  [0;34m"markers for each level of the hue variable"[0m[0;34m)[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m            [0mgrid[0m[0;34m.[0m[0mhue_kws[0m [0;34m=[0m [0;34m{[0m[0;34m"marker"[0m[0;34m:[0m [0mmarkers[0m[0;34m}[0m[0;34m[0m
+[0;34m[0m        [0;32melif[0m [0mkind[0m [0;34m==[0m [0;34m"scatter"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m            [0;32mif[0m [0misinstance[0m[0;34m([0m[0mmarkers[0m[0;34m,[0m [0mstr[0m[0;34m)[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m                [0mplot_kws[0m[0;34m[[0m[0;34m"marker"[0m[0;34m][0m [0;34m=[0m [0mmarkers[0m[0;34m[0m
+[0;34m[0m            [0;32melif[0m [0mhue[0m [0;32mis[0m [0;32mnot[0m [0;32mNone[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m                [0mplot_kws[0m[0;34m[[0m[0;34m"style"[0m[0;34m][0m [0;34m=[0m [0mdata[0m[0;34m[[0m[0mhue[0m[0;34m][0m[0;34m[0m
+[0;34m[0m                [0mplot_kws[0m[0;34m[[0m[0;34m"markers"[0m[0;34m][0m [0;34m=[0m [0mmarkers[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;31m# Draw the marginal plots on the diagonal[0m[0;34m[0m
+[0;34m[0m    [0mdiag_kws[0m [0;34m=[0m [0mdiag_kws[0m[0;34m.[0m[0mcopy[0m[0;34m([0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0mdiag_kws[0m[0;34m.[0m[0msetdefault[0m[0;34m([0m[0;34m"legend"[0m[0;34m,[0m [0;32mFalse[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0;32mif[0m [0mdiag_kind[0m [0;34m==[0m [0;34m"hist"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0mgrid[0m[0;34m.[0m[0mmap_diag[0m[0;34m([0m[0mhistplot[0m[0;34m,[0m [0;34m**[0m[0mdiag_kws[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0;32melif[0m [0mdiag_kind[0m [0;34m==[0m [0;34m"kde"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0mdiag_kws[0m[0;34m.[0m[0msetdefault[0m[0;34m([0m[0;34m"fill"[0m[0;34m,[0m [0;32mTrue[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m        [0mdiag_kws[0m[0;34m.[0m[0msetdefault[0m[0;34m([0m[0;34m"warn_singular"[0m[0;34m,[0m [0;32mFalse[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m        [0mgrid[0m[0;34m.[0m[0mmap_diag[0m[0;34m([0m[0mkdeplot[0m[0;34m,[0m [0;34m**[0m[0mdiag_kws[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;31m# Maybe plot on the off-diagonals[0m[0;34m[0m
+[0;34m[0m    [0;32mif[0m [0mdiag_kind[0m [0;32mis[0m [0;32mnot[0m [0;32mNone[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0mplotter[0m [0;34m=[0m [0mgrid[0m[0;34m.[0m[0mmap_offdiag[0m[0;34m[0m
+[0;34m[0m    [0;32melse[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0mplotter[0m [0;34m=[0m [0mgrid[0m[0;34m.[0m[0mmap[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;32mif[0m [0mkind[0m [0;34m==[0m [0;34m"scatter"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0;32mfrom[0m [0;34m.[0m[0mrelational[0m [0;32mimport[0m [0mscatterplot[0m  [0;31m# Avoid circular import[0m[0;34m[0m
+[0;34m[0m        [0mplotter[0m[0;34m([0m[0mscatterplot[0m[0;34m,[0m [0;34m**[0m[0mplot_kws[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0;32melif[0m [0mkind[0m [0;34m==[0m [0;34m"reg"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0;32mfrom[0m [0;34m.[0m[0mregression[0m [0;32mimport[0m [0mregplot[0m  [0;31m# Avoid circular import[0m[0;34m[0m
+[0;34m[0m        [0mplotter[0m[0;34m([0m[0mregplot[0m[0;34m,[0m [0;34m**[0m[0mplot_kws[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0;32melif[0m [0mkind[0m [0;34m==[0m [0;34m"kde"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0;32mfrom[0m [0;34m.[0m[0mdistributions[0m [0;32mimport[0m [0mkdeplot[0m  [0;31m# Avoid circular import[0m[0;34m[0m
+[0;34m[0m        [0mplot_kws[0m[0;34m.[0m[0msetdefault[0m[0;34m([0m[0;34m"warn_singular"[0m[0;34m,[0m [0;32mFalse[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m        [0mplotter[0m[0;34m([0m[0mkdeplot[0m[0;34m,[0m [0;34m**[0m[0mplot_kws[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m    [0;32melif[0m [0mkind[0m [0;34m==[0m [0;34m"hist"[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0;32mfrom[0m [0;34m.[0m[0mdistributions[0m [0;32mimport[0m [0mhistplot[0m  [0;31m# Avoid circular import[0m[0;34m[0m
+[0;34m[0m        [0mplotter[0m[0;34m([0m[0mhistplot[0m[0;34m,[0m [0;34m**[0m[0mplot_kws[0m[0;34m)[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;31m# Add a legend[0m[0;34m[0m
+[0;34m[0m    [0;32mif[0m [0mhue[0m [0;32mis[0m [0;32mnot[0m [0;32mNone[0m[0;34m:[0m[0;34m[0m
+[0;34m[0m        [0mgrid[0m[0;34m.[0m[0madd_legend[0m[0;34m([0m[0;34m)[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0mgrid[0m[0;34m.[0m[0mtight_layout[0m[0;34m([0m[0;34m)[0m[0;34m[0m
+[0;34m[0m[0;34m[0m
+[0;34m[0m    [0;32mreturn[0m [0mgrid[0m[0;34m[0m[0;34m[0m[0m
+[0;31mFile:[0m      ~/.conda/envs/paper3/lib/python3.8/site-packages/seaborn/axisgrid.py
+[0;31mType:[0m      function
