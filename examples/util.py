@@ -1,13 +1,45 @@
+from collections import defaultdict
+
 import torch
+import numpy as np
+from sklearn.metrics import accuracy_score
+
+from procrustes import orthogonal
+from ecco import analysis
 
 
-def encode_batch(batch, field, tokenizer, model):
-    tok_batch = tokenizer(batch[field],
-                          return_tensors="pt",
-                          padding="longest", 
-                          return_attention_mask=True,
-                          truncation=True,
-                          max_length=100)
+def encode_batch(batch,
+                 field, 
+                 tokenizer, 
+                 model, 
+                 field2=None, 
+                 detok=False, 
+                 lang_code=None, 
+                 encode_token1=False,
+                 encode_cls=True):
+
+    p1 = batch[field]
+    p2 = None
+
+    if field2 is not None:
+        p2 = batch[field2]
+
+    
+    if detok:
+        from sacremoses import MosesDetokenizer
+        md = MosesDetokenizer(lang=lang_code)
+
+        p1 = [md.detokenize(s.split()) for s in p1]
+        if p2 is not None:
+            p2 = [md.detokenize(s.split()) for s in p2]
+
+
+    tok_batch = tokenizer(p1, p2,
+                        return_tensors="pt",
+                        padding="longest", 
+                        return_attention_mask=True,
+                        truncation=True,
+                        max_length=100)
     
     for k, v in tok_batch.items():
         tok_batch[k] = v.to(model.device)
@@ -16,12 +48,13 @@ def encode_batch(batch, field, tokenizer, model):
         enc_batch = model(**tok_batch,
                           return_dict=True,
                           output_hidden_states=True)
-        
-    sent_reps_all_layes_mean = []
-    sent_reps_all_layes_cls = []
+
+    # sent_reps_all_layes_mean = []
+    # sent_reps_all_layes_cls = []
     out_dict = {}
-    for layer_num in range(len(enc_batch.hidden_states)):
-        
+    num_layers = len(enc_batch.hidden_states)
+    for layer_num in range(num_layers):
+
         #mean
         sent_reps_curr_layer_mean = masked_mean(
             enc_batch.hidden_states[layer_num], tok_batch.attention_mask.unsqueeze(2).bool(), 1
@@ -31,12 +64,17 @@ def encode_batch(batch, field, tokenizer, model):
         #sent_reps_all_layes_mean.append(sent_reps_curr_layer_mean.detach().cpu().numpy())
 
         #cls
-        sent_reps_curr_layer_cls = enc_batch.hidden_states[layer_num][:, 0]
-        out_dict[f'cls_{layer_num}'] = sent_reps_curr_layer_cls.detach().cpu().numpy()
+        if encode_cls:
+            sent_reps_curr_layer_cls = enc_batch.hidden_states[layer_num][:, 0]
+            out_dict[f'cls_{layer_num}'] = sent_reps_curr_layer_cls.detach().cpu().numpy()
+
+
+        if encode_token1:
+            sent_reps_curr_layer_token1 = enc_batch.hidden_states[layer_num][:, 1]
+            out_dict[f'token1_{layer_num}'] = sent_reps_curr_layer_token1.detach().cpu().numpy()
 
         #sent_reps_all_layes_cls.append(sent_reps_curr_layer_cls.detach().cpu().numpy())
-        
-        
+    
     return out_dict
 
 
@@ -74,3 +112,36 @@ def masked_mean(
     value_sum = torch.sum(replaced_vector, dim=dim, keepdim=keepdim)
     value_count = torch.sum(mask, dim=dim, keepdim=keepdim)
     return value_sum / value_count.float().clamp(min=tiny_value_of_dtype(torch.float))
+
+
+def compute_cosine_gpu(a, b, center=False, procrustes=False):
+    a, b = np.array(a), np.array(b)
+    
+    if procrustes:
+        result = orthogonal(a, b, scale=True, translate=True)
+        aq = np.dot(result.new_a, result.t)
+        a = aq
+        b = result.new_b
+
+    elif center: # just center
+        a -= a.mean(1, keepdims=True)
+        b -= b.mean(1, keepdims=True)
+    
+    a, b = torch.Tensor(a), torch.Tensor(b)
+    a, b = a.cuda(), b.cuda()
+    
+    a_norm = a / a.norm(dim=1)[:, None]
+    b_norm = b / b.norm(dim=1)[:, None]
+    res = torch.mm(a_norm, b_norm.transpose(0,1))
+    return res.cpu().numpy()
+
+
+def matching_accuracy(a, b, center=False, procrustes=False):
+    d = compute_cosine_gpu(a, b, procrustes=procrustes, center=center)
+    s = accuracy_score(list(range(len(d))), d.argmax(axis=1))
+    return s
+
+
+def cka_score(a, b):
+    a, b = np.array(a), np.array(b)
+    return analysis.cka(a.T, b.T)
