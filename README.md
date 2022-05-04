@@ -5,6 +5,7 @@
 
 
 #### My notes
+```
 srun -p gpu --gres gpu:a100-80g --mem=120G -t 192:00:00 --pty bash
 srun -p gpu --gres gpu:a100-40g --mem=120G -t 192:00:00 --pty bash
 
@@ -16,7 +17,7 @@ conda activate paper3
 
 jupyter notebook --no-browser --port 1234
 ssh -NL 1234:localhost:1234 maksym95@rocket.hpc.ut.ee
-
+```
 
 
 ## Installation
