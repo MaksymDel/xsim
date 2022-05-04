@@ -3,7 +3,7 @@ import sys
 from transformers import AutoTokenizer, AutoModel
 from datasets import load_dataset
 
-from util import encode_batch
+from util import encode_batch, get_hf_model_ids, get_langs_list
 
 
 model_class = sys.argv[1]
@@ -11,44 +11,12 @@ model_class = sys.argv[1]
 #model_class = "xlmr"
 
 
-if model_class not in ["mT5", "xlmr", "xglm"]:
-    raise ValueError("model class is wrong")
-
-
 batch_size = 100
 num_lines = 10000
 # num_lines = 100
 
-
-if model_class == "mT5":
-    hf_model_ids = ['google/mt5-small',
-                    'google/mt5-base',
-                    'google/mt5-large',
-                    'google/mt5-xl',
-                    'google/mt5-xxl']
-
-elif model_class == "xlmr":
-    hf_model_ids = ['xlm-roberta-base',
-                    'xlm-roberta-large',
-                    'facebook/xlm-roberta-xl',
-                    'facebook/xlm-roberta-xxl']
-
-elif model_class == "xglm":
-    hf_model_ids = ['facebook/xglm-564M',
-                    'facebook/xglm-1.7B',
-                    'facebook/xglm-2.9B',
-                    'facebook/xglm-4.5B',
-                    'facebook/xglm-7.5B']    
-else:
-    raise ValueError("wrong model class specified")
-
-
-langs = ['en', 'fr', 'de', 'et', 'ru']
-
-# hf_model_ids = ['xlm-roberta-base',
-#                 'xlm-roberta-large']
-
-# langs = ['en', 'fr', 'de']
+hf_model_ids = get_hf_model_ids(model_class)
+langs = get_langs_list(model_class)
 
 dataset = {}
 for l in langs:
@@ -92,6 +60,11 @@ for hf_model_id in list(reversed(hf_model_ids)):
              batch_size=batch_size
         )
         
-        dataset_enc.save_to_disk(f"../experiments/encoded_datasets/xnli/{hf_model_id.split('/')[-1]}/{lang}")
+        if model_class.startswith("norm"):
+            savedir = f"{model_class}_{hf_model_id.split('/')[-2]}"
+        else:
+            savedir = hf_model_id.split('/')[-1]
+
+        dataset_enc.save_to_disk(f"../experiments/encoded_datasets/xnli/{savedir}/{lang}")
 
 print("Finshed")

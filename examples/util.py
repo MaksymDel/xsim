@@ -145,3 +145,50 @@ def matching_accuracy(a, b, center=False, procrustes=False):
 def cka_score(a, b):
     a, b = np.array(a), np.array(b)
     return analysis.cka(a.T, b.T)
+
+
+def get_langs_list(model_class):
+    if model_class.startswith("norm"):
+        langs = ['en', 'fr', 'et', 'bg']
+    else:
+        langs = ['en', 'fr', 'de', 'et', 'ru']
+    return langs
+
+
+def get_hf_model_ids(model_class):
+    normdir="/gpfs/space/home/maksym95/third-paper/saved_models"
+    if model_class == "norm_1M":
+        hf_model_ids = [f'{normdir}/scale_post/checkpoint-1000000',
+                        f'{normdir}/scale_pre/checkpoint-1000000',
+                        f'{normdir}/scale_normformer/checkpoint-1000000']
+
+
+    elif model_class == "norm":
+        hf_model_ids = [f'{normdir}/scale_zero/checkpoint-100000',
+                        f'{normdir}/scale_post/checkpoint-100000',
+                        f'{normdir}/scale_pre/checkpoint-100000',
+                        f'{normdir}/scale_normformer/checkpoint-100000']
+
+    elif model_class == "mT5":
+        hf_model_ids = ['google/mt5-small',
+                        'google/mt5-base',
+                        'google/mt5-large',
+                        'google/mt5-xl',
+                        'google/mt5-xxl']
+
+    elif model_class == "xlmr":
+        hf_model_ids = ['xlm-roberta-base',
+                        'xlm-roberta-large',
+                        'facebook/xlm-roberta-xl',
+                        'facebook/xlm-roberta-xxl']
+
+    elif model_class == "xglm":
+        hf_model_ids = ['facebook/xglm-564M',
+                        'facebook/xglm-1.7B',
+                        'facebook/xglm-2.9B',
+                        'facebook/xglm-4.5B',
+                        'facebook/xglm-7.5B']    
+    else:
+        raise ValueError("wrong model class specified")
+    
+    return hf_model_ids
