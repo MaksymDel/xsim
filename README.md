@@ -24,7 +24,8 @@ conda install -c conda-forge notebook
 ```
 
 ## Fetch data
-```
+
+```bash
 mkdir experiments
 cd experiments
 mkdir multilingual
@@ -42,7 +43,11 @@ wget https://dl.fbaipublicfiles.com/XNLI/XNLI-15way.zip
 unzip XNLI-15way.zip
 rm XNLI-15way.zip
 mv XNLI-15way xnli_15way/data
+
+cd ../..
 ```
+
+Run the following from examples directory.
 
 ## XLM-R Normformer Experiments
 
@@ -51,17 +56,21 @@ python -u encode_dataset_with_models.py norm_1M
 
 python -u run_analysis.py norm_1M cka
 python -u run_analysis.py norm_1M acc 
-python -u run_analysis.py norm_1M corr
+python -u run_analysis_torch_corr.py norm_1M corr
 ```
 
 ## Meta's XLM-R and XGLM Experiments
 
 ```bash
+cd examples
+
 python -u encode_dataset_with_models.py xlmr
 python -u encode_dataset_with_models.py xglm
 
-python -u run_analysis.py xlmr corr
-python -u run_analysis.py xglm corr
+python -u run_analysis_torch_corr.py xlmr corr
+python -u run_analysis_torch_corr.py xglm corr
 ```
+
+## Results
 
 Now you can run the analysis from the [Notebook](examples/emnlp22_anon.ipynb).
