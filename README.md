@@ -1,23 +1,10 @@
-# Interlingua in Multilingual Language Models Revised
+# Cross-lingual Similarity of Multilingual Representations Revisited
+
+This repository is to reproduce results from our paper: Cross-lingual Similarity of Multilingual Representations Revisited.
+
 ## Notebook with results:
 
-[Notebook: Interlingua in Multilingual Language Models Revised](examples/multilingual-case_study.ipynb)
-
-
-#### My notes
-```
-srun -p gpu --gres gpu:a100-80g --mem=120G -t 192:00:00 --pty bash
-srun -p gpu --gres gpu:a100-40g --mem=120G -t 192:00:00 --pty bash
-
-
-
-module load any/python/3.8.3-conda
-module load cuda/11.3.1
-conda activate paper3
-
-jupyter notebook --no-browser --port 1234
-ssh -NL 1234:localhost:1234 maksym95@rocket.hpc.ut.ee
-```
+[Notebook: Cross-lingual Similarity of Multilingual Representations Revisited](examples/emnlp22_anon.ipynb)
 
 
 ## Installation
@@ -26,22 +13,13 @@ ssh -NL 1234:localhost:1234 maksym95@rocket.hpc.ut.ee
 conda create -n norm python=3.8
 conda activate norm
 
-pip install torch torchvision torchaudio
+pip install torch 
 pip install transformers
 pip install -U sacremoses
 pip install sentencepiece
 pip install protobuf
 pip install scipy, pandas, matplotlib
 conda install -c conda-forge notebook
-
-# also install R for plots
-pip install rpy2 --user
-
-# install R packages
-R
-install.packages("rlang")
-install.packages("lazteval")
-install.packages("ggplot2")
 
 ```
 
@@ -66,14 +44,24 @@ rm XNLI-15way.zip
 mv XNLI-15way xnli_15way/data
 ```
 
-# Run scripts
-```
-new: 
-sbatch run_task.sh
+## XLM-R Normformer Experiments
 
-old:
-CUDA_VISIBLE_DEVICES=1 python scripts/run_sent_reps_extraction.py xnli_extension
-bash scripts/compute_metrics_parallel.sh
+```bash
+python -u encode_dataset_with_models.py norm_1M
+
+python -u run_analysis.py norm_1M cka
+python -u run_analysis.py norm_1M acc 
+python -u run_analysis.py norm_1M corr
 ```
 
-Now you can run analysis from the `notebooks` forlder and reproduce the plots.
+## Meta's XLM-R and XGLM Experiments
+
+```bash
+python -u encode_dataset_with_models.py xlmr
+python -u encode_dataset_with_models.py xglm
+
+python -u run_analysis.py xlmr corr
+python -u run_analysis.py xglm corr
+```
+
+Now you can run the analysis from the [Notebook](examples/emnlp22_anon.ipynb).
