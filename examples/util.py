@@ -1,11 +1,90 @@
 from collections import defaultdict
 
 import torch
+import torch.nn.functional as F
 import numpy as np
 from sklearn.metrics import accuracy_score
+from numpy import dot
+from numpy.linalg import norm
+
 
 from procrustes import orthogonal
 from ecco import analysis
+from datasets import load_dataset
+from transformers import AutoTokenizer, AutoModel
+
+
+
+def load_models_tokenizers(model_class, hf_model_ids=None, HfModelClass=None):
+    if HfModelClass is None:
+        HfModelClass = AutoModel
+    
+    if hf_model_ids is None:
+        hf_model_ids = get_hf_model_ids(model_class)
+
+    if type(hf_model_ids) == list:
+        hf_model_ids = add_model_names(model_class, hf_model_ids)
+
+    models = {}
+    tokenizers = {}
+    for model_name, hf_model_id in hf_model_ids.items():
+        print('\n loading ', hf_model_id, '\n')
+        
+        # load model
+        tokenizer = AutoTokenizer.from_pretrained(hf_model_id)
+
+        if model_class == "mT5":
+            model = HfModelClass.from_pretrained(hf_model_id).encoder        
+        else:
+            model = HfModelClass.from_pretrained(hf_model_id)
+        
+        _ = model.cuda()
+
+        models[model_name] = model
+        tokenizers[model_name] = tokenizer
+
+    return models, tokenizers
+
+
+def add_model_names(model_class, hf_model_ids):
+    if model_class.startswith("norm"):
+        model_names = [hf_model_id.split('/')[-2] for hf_model_id in hf_model_ids]
+    else:
+        model_names = [hf_model_id.split('/')[-1] for hf_model_id in hf_model_ids]
+    hf_model_ids = {model_name: hf_model_id for model_name, hf_model_id in zip(model_names, hf_model_ids)}
+    return hf_model_ids
+
+
+def load_parallel_xnli_datasets(langs, num_lines=10000):
+    datasets = {}
+    for l in langs:
+        datasets[l] = load_dataset('csv', 
+                                delimiter='\t',
+                                header=0,
+                                quoting=3,
+                                data_files=f"../experiments/multilingual/xnli_extension/data/multinli.train.{l}.tsv",
+                                split=f'train[0:{num_lines}]')
+    return datasets    
+
+
+
+def encode_dataset(dataset, lang, tokenizer, model, batch_size, surgery_prediction_head=None):
+    encoded_dataset = dataset.map(
+        function=encode_batch, 
+        fn_kwargs={
+            'field': 'hypo', 
+            'tokenizer': tokenizer, 
+            'model': model,
+            'detok': True,
+            'lang_code': lang,
+            "encode_token1": False,
+            "encode_cls": False,
+            "surgery_prediction_head": surgery_prediction_head
+        },
+            batched=True,
+            batch_size=batch_size
+    )
+    return encoded_dataset
 
 
 def encode_batch(batch,
@@ -16,7 +95,8 @@ def encode_batch(batch,
                  detok=False, 
                  lang_code=None, 
                  encode_token1=False,
-                 encode_cls=True):
+                 encode_cls=True,
+                 surgery_prediction_head=None):
 
     p1 = batch[field]
     p2 = None
@@ -75,6 +155,11 @@ def encode_batch(batch,
 
         #sent_reps_all_layes_cls.append(sent_reps_curr_layer_cls.detach().cpu().numpy())
     
+    if surgery_prediction_head is not None:
+        prediction_head_dict = surgery_prediction_head(enc_batch.hidden_states[-1])
+        prediction_head_dict = {k: v.detach().cpu().numpy() for k, v in prediction_head_dict.items()}
+        out_dict.update(prediction_head_dict)
+
     return out_dict
 
 
@@ -147,11 +232,71 @@ def cka_score(a, b):
     return analysis.cka(a.T, b.T)
 
 
+def pwcca_score(a, b):
+    a, b = np.array(a), np.array(b)
+    return analysis.pwcca(a.T, b.T)
+
+
+def svcca_score(a, b):
+    a, b = np.array(a), np.array(b)
+    return analysis.svcca(a.T, b.T)
+
+
+def cca_score(a, b):
+    a, b = np.array(a), np.array(b)
+    return analysis.cca(a.T, b.T)
+
+# euuclid
+def neuron_dists(a, b):
+    a, b = np.array(a).T, np.array(b).T
+    all_distances = []
+    for neuron_1, neuron_2 in zip(a, b):
+        all_distances.append(np.linalg.norm(neuron_1-neuron_2))
+    return all_distances
+
+def euclid_score(a, b):
+    all_distances = neuron_dists(a, b)
+    return sum(all_distances)
+
+def normalize_euclid_score(a, b, norm_factor):
+    total_d = euclid_score(a,b)
+    return 1 - total_d / norm_factor
+###
+def cosine_score(a, b):
+    a, b = np.array(a).T, np.array(b).T
+    all_distances = []
+    for neuron_1, neuron_2 in zip(a, b): # todo: do not recompute enlglish, use gpu
+        s = abs(dot(neuron_1, neuron_2) / (norm(neuron_1) * norm(neuron_2)))
+        all_distances.append(s)
+    return sum(all_distances) / len(all_distances)
+
+def torch_corr_all(a, b):
+    a, b = torch.Tensor(a), torch.Tensor(b)
+    a, b = a.cuda(), b.cuda()
+    # center
+    a -= a.mean(dim=0)
+    b -= b.mean(dim=0)
+    # cosine
+    score = F.cosine_similarity(a, b, dim=0)
+    return score.cpu().numpy()
+
+def torch_cosines_all(a, b):
+    a, b = torch.Tensor(a), torch.Tensor(b)
+    a, b = a.cuda(), b.cuda()
+    # cosine
+    score = F.cosine_similarity(a, b, dim=0)
+    return score.cpu().numpy()
+
+def torch_corr_score(a, b):
+    return abs(torch_corr_all(a, b)).mean()
+
 def get_langs_list(model_class):
     if model_class.startswith("norm"):
         langs = ['en', 'fr', 'et', 'bg']
+    elif model_class.startswith("mbert") or model_class.startswith("xlmrb"):
+        langs = ['en', 'et', 'lt', 'lv', 'fr', "pl"]
     else:
-        langs = ['en', 'fr', 'de', 'et', 'ru']
+        langs = ['en', 'fr', 'et', 'ru', 'de']
     return langs
 
 
@@ -162,6 +307,11 @@ def get_hf_model_ids(model_class):
                         f'{normdir}/scale_pre/checkpoint-1000000',
                         f'{normdir}/scale_normformer/checkpoint-1000000']
 
+    # if model_class == "norm_1M":
+    #     hf_model_ids = [f'{normdir}/scale_normformer/checkpoint-1000000'],
+
+    elif model_class == "norm_1M_v2":
+        hf_model_ids = [f'{normdir}/scale_normformer-v2/checkpoint-1000000']
 
     elif model_class == "norm":
         hf_model_ids = [f'{normdir}/scale_zero/checkpoint-100000',
@@ -169,12 +319,19 @@ def get_hf_model_ids(model_class):
                         f'{normdir}/scale_pre/checkpoint-100000',
                         f'{normdir}/scale_normformer/checkpoint-100000']
 
+    elif model_class == "mbert":
+        hf_model_ids = ['bert-base-multilingual-cased']
+
     elif model_class == "mT5":
         hf_model_ids = ['google/mt5-small',
                         'google/mt5-base',
                         'google/mt5-large',
                         'google/mt5-xl',
                         'google/mt5-xxl']
+
+    elif model_class == "xlmrb":
+        hf_model_ids = ['xlm-roberta-base']
+
 
     elif model_class == "xlmr":
         hf_model_ids = ['xlm-roberta-base',
