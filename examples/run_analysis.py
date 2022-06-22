@@ -78,7 +78,7 @@ for hf_model_id in list(reversed(hf_model_ids)):
             elif task == "corr":
                 s = torch_corr_score(src[f'mean_{l}'], (tgt[f'mean_{l}']))
 
-            else: # svcca; pwcca
+            else:
                 raise ValueError
             
             scores_dict[hf_model_id][f"en-{lang}"].append(s)
