@@ -23,23 +23,17 @@ module load any/python/3.8.3-conda
 module load cuda/11.3.1
 conda activate paper3
 
-# python -u encode_dataset_with_models.py mT5
-# python -u encode_dataset_with_models.py xlmr
-# python -u encode_dataset_with_models.py xglm
 
-# python -u run_analysis.py mT5 acc
-# python -u run_analysis.py mT5 acc-cent
-# python -u run_analysis.py mT5 acc-procrustes
-# python -u run_analysis.py mT5 cka
+python -u encode_dataset_with_models.py norm_1M
+python -u encode_dataset_with_models.py xlmr
+python -u encode_dataset_with_models.py xglm
 
-# python -u run_analysis.py xlmr acc
-# python -u run_analysis.py xlmr acc-cent
-# python -u run_analysis.py xlmr acc-procrustes
-# python -u run_analysis.py xlmr cka
+python -u run_analysis.py norm_1M cka
+python -u run_analysis.py norm_1M acc 
+python -u run_analysis.py norm_1M corr
 
-# python -u run_analysis.py xglm acc
-# python -u run_analysis.py xglm acc-cent
-# python -u run_analysis.py xglm acc-procrustes
-# python -u run_analysis.py xglm cka
+
+python -u run_analysis.py xlmr corr
+python -u run_analysis.py xglm corr
 
 
