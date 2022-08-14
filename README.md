@@ -18,7 +18,7 @@ Experiments codes: [link](https://github.com/deldelmax/interlingua/blob/master/C
 
 Paper link: [aclanthology](https://aclanthology.org/2021.wmt-1.65/)
 
-Notebook with results: [link](https://github.com/deldelmax/interlingua/blob/919e64741026bffae4bc6a9251d82c77c19d338d/examples/automatic_domains_clustering.ipynb)
+Notebook with results: [link](examples/automatic_domains_clustering.ipynb)
 
 Experiments code: [external repo](https://github.com/TartuNLP/inherent-domains-wmt21)
 
