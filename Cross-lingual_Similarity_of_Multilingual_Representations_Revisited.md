@@ -51,6 +51,8 @@ Run the following from examples directory.
 ## XLM-R Normformer Experiments
 
 ```bash
+cd examples
+
 python -u encode_dataset_with_models.py norm_1M
 
 python -u run_analysis.py norm_1M cka
