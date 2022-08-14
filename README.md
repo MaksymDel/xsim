@@ -1,4 +1,4 @@
-# My Research in Cross-lingual Representational Similarity
+# My Research in Cross-lingual Representational Similarity (xsim)
 
 This repository contains links and codes for the following papers:
 
