@@ -6,9 +6,9 @@ from typing import AsyncIterable
 
 sys.path.append(".")
 
-from normal_transformers.util.util_analysis import compute_similarity_all_layers
-from normal_transformers.util.util_data import pickle_load_from_file
-from normal_transformers.util import constants
+from xsim.util.util_analysis import compute_similarity_all_layers
+from xsim.util.util_data import pickle_load_from_file
+from xsim.util import constants
 
 
 # Example runs:

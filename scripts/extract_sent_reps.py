@@ -4,12 +4,12 @@ import sys
 sys.path.append(".")
 
 from transformers import AutoModel, AutoTokenizer, AutoConfig
-from normal_transformers.util.util_data import (
+from xsim.util.util_data import (
     pickle_dump_to_file,
     read_data,
 )
-from normal_transformers.util.util_encode import extract_reps_sent
-from normal_transformers.util import constants
+from xsim.util.util_encode import extract_reps_sent
+from xsim.util import constants
 
 # exp_name = "xnli_extension"
 # exp_name = "xnli_extension_onlyhyp"

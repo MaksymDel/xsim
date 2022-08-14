@@ -4,8 +4,8 @@ import sys
 
 sys.path.append('..')
 
-from normal_transformers.util.util_analysis import compute_similarity_all_layers
-from normal_transformers.util.util_common import pickle_dump_to_file, pickle_load_from_file
+from xsim.util.util_analysis import compute_similarity_all_layers
+from xsim.util.util_common import pickle_dump_to_file, pickle_load_from_file
 
 
 def compute_sim_scores(data_encoded, sim_name, langs):

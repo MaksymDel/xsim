@@ -1,5 +1,5 @@
-from normal_transformers.analysis import anatome
-from normal_transformers.analysis import google
+from xsim.analysis import anatome
+from xsim.analysis import google
 
 
 def compute_similarity_all_layers(M1, M2, sim_name, skip_embedding_layer=True):

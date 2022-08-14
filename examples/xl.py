@@ -3,7 +3,7 @@ import csv
 
 from sqlalchemy import true
 
-from normal_transformers.util.util_data import pickle_load_from_file
+from xsim.util.util_data import pickle_load_from_file
 
 model_names_mapping = {
     "xlm-roberta-base": "xlm-roberta-base",
