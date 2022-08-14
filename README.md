@@ -12,13 +12,13 @@ Paper link: TBA
 
 Results notebook: [link](examples/emnlp22.ipynb)
 
-Experiments codes: [link](https://github.dev/deldelmax/interlingua/blob/master/scripts/README_Cross-lingual_Similarity_of_Multilingual_Representations_Revisited.md)
+Experiments codes: [link](https://github.com/deldelmax/interlingua/blob/master/scripts/README_Cross-lingual_Similarity_of_Multilingual_Representations_Revisited.md)
 
 ## Translation Transformers Rediscover Inherent Data Domains
 
 Paper link: [aclanthology](https://aclanthology.org/2021.wmt-1.65/)
 
-Notebook with results: [link](https://github.dev/deldelmax/interlingua/blob/919e64741026bffae4bc6a9251d82c77c19d338d/examples/automatic_domains_clustering.ipynb)
+Notebook with results: [link](https://github.com/deldelmax/interlingua/blob/919e64741026bffae4bc6a9251d82c77c19d338d/examples/automatic_domains_clustering.ipynb)
 
 Experiments code: [external repo](https://github.com/TartuNLP/inherent-domains-wmt21)
 
