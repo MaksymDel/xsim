@@ -12,7 +12,7 @@ Paper link: TBA
 
 Results notebook: [link](examples/emnlp22.ipynb)
 
-Experiments codes: [link](https://github.com/deldelmax/interlingua/blob/master/Cross-lingual_Similarity_of_Multilingual_Representations_Revisited.md)
+Experiments codes: [link](Cross-lingual_Similarity_of_Multilingual_Representations_Revisited.md)
 
 ## Translation Transformers Rediscover Inherent Data Domains
 
