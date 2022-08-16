@@ -1,4 +1,4 @@
-# Our Research in Cross-lingual Representational Similarity (xsim)
+# Our Research in Cross-lingual/Cross-domain Representational Similarity (xsim)
 
 This repository contains links and codes for the following papers:
 
