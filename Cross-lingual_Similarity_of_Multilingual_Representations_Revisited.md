@@ -1,10 +1,10 @@
-# Cross-lingual Similarity of Multilingual Representations Revisited
+# Cross-lingual Similarity of Multilingual Representations Revisited (AACL 2022)
 
 This README shows how to reproduce results from our paper: Cross-lingual Similarity of Multilingual Representations Revisited.
 
-Preprint link: TBA
+PDF LINK: TBA
 
-Notebook: [link](examples/emnlp22.ipynb)
+RESULTS NOTEBOOK: [link](examples/emnlp22.ipynb)
 
 ## Installation
 ```
