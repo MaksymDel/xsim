@@ -2,9 +2,15 @@
 
 This README shows how to reproduce results from our paper: Cross-lingual Similarity of Multilingual Representations Revisited.
 
-PDF LINK: TBA
+PDF LINK: [aclanthology](https://aclanthology.org/2022.aacl-main.15/) 
 
 RESULTS NOTEBOOK: [link](examples/emnlp22.ipynb)
+
+## Pretrained models
+scale_pre: https://huggingface.co/delmaksym/aacl22.scale_pre
+scale_post: https://huggingface.co/delmaksym/aacl22.scale_post
+scale_normformer: https://huggingface.co/delmaksym/aacl22.scale_normformer
+scale_normformer-v2 (retrained with another random init): https://huggingface.co/delmaksym/aacl22.scale_normformer-v2
 
 ## Installation
 ```
