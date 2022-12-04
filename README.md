@@ -8,15 +8,15 @@ This repository contains links and codes for the following papers:
 
 ## Cross-lingual Similarity of Multilingual Representations Revisited
 
-Paper link: TBA\
+Paper link: [aclanthology](https://aclanthology.org/2022.aacl-main.15/)\
 Results notebook: [link](examples/emnlp22.ipynb)\
-Experiments codes: [link](Cross-lingual_Similarity_of_Multilingual_Representations_Revisited.md)
+Experiments home: [link](Cross-lingual_Similarity_of_Multilingual_Representations_Revisited.md)
 
 ## Translation Transformers Rediscover Inherent Data Domains
 
 Paper link: [aclanthology](https://aclanthology.org/2021.wmt-1.65/)\
 Notebook with results: [link](examples/automatic_domains_clustering.ipynb)\
-Experiments code: [external repo](https://github.com/TartuNLP/inherent-domains-wmt21)\
+Experiments home: [external repo](https://github.com/TartuNLP/inherent-domains-wmt21)\
 Production code: [external repo](https://github.com/TartuNLP/domain_clusters)
 
 ## Similarity of Sentence Representations in Multilingual LMs: Resolving Conflicting Literature and a Case Study of Baltic Languages
