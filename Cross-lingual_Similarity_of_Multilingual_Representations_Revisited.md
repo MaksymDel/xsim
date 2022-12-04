@@ -7,10 +7,12 @@ PDF LINK: [aclanthology](https://aclanthology.org/2022.aacl-main.15/)
 RESULTS NOTEBOOK: [link](examples/emnlp22.ipynb)
 
 ## Pretrained models
-scale_pre: https://huggingface.co/delmaksym/aacl22.scale_pre
-scale_post: https://huggingface.co/delmaksym/aacl22.scale_post
-scale_normformer: https://huggingface.co/delmaksym/aacl22.scale_normformer
-scale_normformer-v2 (retrained with another random init): https://huggingface.co/delmaksym/aacl22.scale_normformer-v2
+
+`scale_pre`: https://huggingface.co/delmaksym/aacl22.scale_pre </br>
+`scale_post`: https://huggingface.co/delmaksym/aacl22.scale_post </br>
+`scale_normformer`: https://huggingface.co/delmaksym/aacl22.scale_normformer </br>
+`scale_normformer-v2` (retrained with another random init): https://huggingface.co/delmaksym/aacl22.scale_normformer-v2
+
 
 ## Installation
 ```
