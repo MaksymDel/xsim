@@ -9,7 +9,7 @@ This repository contains links and codes for the following papers:
 ## Cross-lingual Similarity of Multilingual Representations Revisited
 
 Paper link: [aclanthology](https://aclanthology.org/2022.aacl-main.15/)\
-Results notebook: [link](examples/emnlp22.ipynb)\
+Results notebook: [link](examples/aacl_2022.ipynb)\
 Experiments home: [link](Cross-lingual_Similarity_of_Multilingual_Representations_Revisited.md)\
 BibTeX:
 ```
